@@ -5,5 +5,5 @@ class NonCopyable
   public:
     NonCopyable(const NonCopyable &) = delete;		  // deleted
     NonCopyable &operator=(const NonCopyable &) = delete; // deleted
-    NonCopyable() = default;				  // available
+    NonCopyable() = default;				  // available will change to delete
 };

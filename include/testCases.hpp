@@ -21,10 +21,6 @@ class test_case_base : NonCopyable, public std::enable_shared_from_this<test_cas
             _destroy_env(arg);
         }
     }
-    TEST_PREPARE_FUNCTION _prepare_env;
-    TEST_BODY_FUNCTION _body;
-    TEST_DESTROY_FUNCTION _destroy_env;
-    void *arg;
 
     virtual void run()
     {
@@ -37,4 +33,11 @@ class test_case_base : NonCopyable, public std::enable_shared_from_this<test_cas
     {
         return shared_from_this();
     }
+
+    TEST_PREPARE_FUNCTION _prepare_env;
+    TEST_BODY_FUNCTION _body;
+    TEST_DESTROY_FUNCTION _destroy_env;
+    void *arg;
+    string case_name;
+    string case_info;
 };

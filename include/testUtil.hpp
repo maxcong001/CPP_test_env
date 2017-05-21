@@ -16,11 +16,6 @@
 
 using namespace std;
 
-typedef std::function<void()> TEST_FUNCTION;
 typedef std::function<void(void *)> TEST_BODY_FUNCTION;
 typedef std::function<void *()> TEST_PREPARE_FUNCTION;
 typedef std::function<void(void *)> TEST_DESTROY_FUNCTION;
-vector<TEST_FUNCTION> TEST_VECTOR;
-typedef std::lock_guard<std::recursive_mutex> TEST_GUARD;
-typedef std::unique_lock<std::recursive_mutex> TEST_UNIQUE;
-std::recursive_mutex func_mutex;
