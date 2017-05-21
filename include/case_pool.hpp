@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (c) 2016-20017 Max Cong <savagecm@qq.com>
  * this code can be found at https://github.com/maxcong001/CPP_test_env
@@ -23,10 +24,5 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "testInclude.hpp"
-int main()
-{
-    suit_0001->addCase(case_0001);
-
-    suit_0001->run();
-}
+#include "testUtil.hpp"
+shared_ptr<test_case_base> case_0001(new test_case_base(prepare_env_example, body_0001, destory_env_example));

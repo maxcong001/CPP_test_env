@@ -28,3 +28,5 @@
 #include "testCasesBody.hpp"
 #include "testSuit.hpp"
 #include "testUtil.hpp"
+#include "case_pool.hpp"
+#include "suit_pool.hpp"
