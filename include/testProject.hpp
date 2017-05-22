@@ -24,24 +24,23 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include <iostream>
-#include <vector>
-#include <chrono>
-#include <map>
-#include <thread>
-#include <string>
-#include <tuple>
-#include <condition_variable>
-#include <mutex>
-#include <stdlib.h>
-#include <time.h>
-#include <memory>
-#include "NonCopyable.hpp"
-#include "singleton.hpp"
+#include "testUtil.hpp"
 
-
-using namespace std;
-
-typedef std::function<void(void *)> TEST_BODY_FUNCTION;
-typedef std::function<void *()> TEST_PREPARE_FUNCTION;
-typedef std::function<void(void *)> TEST_DESTROY_FUNCTION;
+class test_project_base
+{
+  public:
+    void add_suit(std::shared_ptr<test_suit_base> test_suit)
+    {
+        _suit[suitID] = test_suit;
+        suitID++;
+    }
+    void run()
+    {
+        for (auto i : _suit)
+        {
+            (i.second)->run();
+        }
+    }
+    int suitID;
+    std::map<int, std::shared_ptr<test_suit_base> > _suit;
+};

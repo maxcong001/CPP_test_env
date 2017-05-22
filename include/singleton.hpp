@@ -1,7 +1,8 @@
 #pragma once
+
 /*
  * Copyright (c) 2016-20017 Max Cong <savagecm@qq.com>
- * this code can be found at https://github.com/maxcong001/CPP_test_env
+ * this code can be found at https://github.com/maxcong001/design_pattern/edit/master/include/singleton/singleton.hpp
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -24,24 +25,38 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include <iostream>
-#include <vector>
-#include <chrono>
-#include <map>
-#include <thread>
-#include <string>
-#include <tuple>
-#include <condition_variable>
-#include <mutex>
-#include <stdlib.h>
-#include <time.h>
-#include <memory>
-#include "NonCopyable.hpp"
-#include "singleton.hpp"
+template <typename T>
+class Singleton
+{
+  public:
+    template <typename... Args>
+    static T *Instance(Args &&... args)
+    {
+        if (m_pInstance == nullptr)
+            m_pInstance = new T(std::forward<Args>(args)...);
+        return m_pInstance;
+    }
+    static T *GetInstance()
+    {
+        if (m_pInstance == nullptr)
+            throw std::logic_error("the instance is not init, please initialize the instance first");
+        return m_pInstance;
+    }
+    static void DestroyInstance()
+    {
+        delete m_pInstance;
+        m_pInstance = nullptr;
+    }
 
+  private:
+    Singleton(void);
+    virtual ~Singleton(void);
+    Singleton(const Singleton &);
+    Singleton &operator=(const Singleton &);
 
-using namespace std;
+  private:
+    static T *m_pInstance;
+};
 
-typedef std::function<void(void *)> TEST_BODY_FUNCTION;
-typedef std::function<void *()> TEST_PREPARE_FUNCTION;
-typedef std::function<void(void *)> TEST_DESTROY_FUNCTION;
+template <class T>
+T *Singleton<T>::m_pInstance = nullptr;

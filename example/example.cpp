@@ -24,9 +24,16 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "testInclude.hpp"
+class test_project_base;
 int main()
 {
     suit_0001->addCase(case_0001);
 
-    suit_0001->run();
+    auto project_instance = Singleton<test_project_base>::Instance();
+    project_instance->add_suit(suit_0001);
+    project_instance->run();
+
+
+    Singleton<test_project_base>::DestroyInstance();
+
 }
