@@ -27,13 +27,16 @@
 class test_project_base;
 int main()
 {
+    // prepare suit here
     suit_0001->addCase(case_0001);
-
+    suit_0001->addCase(case_0001);
+    suit_0001->addCase(case_0001);
+    // get project instance
     auto project_instance = Singleton<test_project_base>::Instance();
+    // add your suit here
     project_instance->add_suit(suit_0001);
+    // run!
     project_instance->run();
-
-
+    // destroy the project instance
     Singleton<test_project_base>::DestroyInstance();
-
 }

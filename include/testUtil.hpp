@@ -36,12 +36,18 @@
 #include <stdlib.h>
 #include <time.h>
 #include <memory>
+#include <vector>
+#include <unordered_map>
 #include "NonCopyable.hpp"
 #include "singleton.hpp"
 
 
 using namespace std;
-
+/*
 typedef std::function<void(void *)> TEST_BODY_FUNCTION;
 typedef std::function<void *()> TEST_PREPARE_FUNCTION;
 typedef std::function<void(void *)> TEST_DESTROY_FUNCTION;
+*/
+typedef void (* TEST_BODY_FUNCTION)(void *);
+typedef void *(* TEST_PREPARE_FUNCTION)();
+typedef void (* TEST_DESTROY_FUNCTION)(void *);

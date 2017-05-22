@@ -27,6 +27,7 @@
 #include "testUtil.hpp"
 void *prepare_env_example()
 {
+    std::cout << "prepare env is called"<<std::endl;
     return NULL;
 }
 void destory_env_example(void *arg)

@@ -42,5 +42,5 @@ class test_project_base
         }
     }
     int suitID;
-    std::map<int, std::shared_ptr<test_suit_base> > _suit;
+    std::unordered_map<int, std::shared_ptr<test_suit_base> > _suit;
 };

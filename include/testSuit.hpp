@@ -40,11 +40,31 @@ class test_suit_base : NonCopyable, public std::enable_shared_from_this<test_sui
     }
     void run()
     {
+        std::unordered_map< TEST_PREPARE_FUNCTION , std::vector<std::shared_ptr<test_case_base> > > fun_cases_map;
         for (auto i : _cases)
         {
-            (i.second)->run();
+            if (fun_cases_map.find((i.second)->get_prepare_func()) != fun_cases_map.end())
+            {
+                (fun_cases_map[(i.second)->get_prepare_func()]).emplace_back(i.second);
+
+            }
+            else
+            {   // delete this later, same with previous
+                (fun_cases_map[(i.second)->get_prepare_func()]).emplace_back(i.second);
+            }
+
+            //(i.second)->run();
+        }
+        for (auto j : fun_cases_map)
+        {
+            void *tmp_arg = (j.first)();
+            for (auto k : (j.second))
+            {
+                k->set_arg(tmp_arg);
+                k->run_body();
+            }
         }
     }
     int caseID;
-    std::map<int, std::shared_ptr<test_case_base> > _cases;
+    std::unordered_map<int, std::shared_ptr<test_case_base> > _cases;
 };
