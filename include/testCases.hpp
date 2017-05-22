@@ -34,7 +34,7 @@ class test_case_base : NonCopyable, public std::enable_shared_from_this<test_cas
         _prepare_env = prepare_env_arg;
         _body = body;
         _destroy_env = destroy_env;
-        /*
+/*
         if (_prepare_env)
         {
             arg = prepare_env();
@@ -43,14 +43,27 @@ class test_case_base : NonCopyable, public std::enable_shared_from_this<test_cas
     }
     ~test_case_base()
     {
+        // in the test case, this is a smart pointer, so the destroy function will called when exit.
+        // this is called in the suit class, delete it here
+/*
         if (_destroy_env)
         {
             _destroy_env(arg);
         }
+*/
     }
     TEST_PREPARE_FUNCTION get_prepare_func()
     {
         return _prepare_env;
+    }
+    TEST_DESTROY_FUNCTION get_destroy_func()
+    {
+        return _destroy_env;
+    }
+
+    virtual void *get_arg()
+    {
+        return arg;
     }
     virtual void set_arg(void *inArg)
     {
@@ -73,6 +86,13 @@ class test_case_base : NonCopyable, public std::enable_shared_from_this<test_cas
         if (_prepare_env)
         {
             arg = _prepare_env();
+        }
+    }
+    virtual void destroy_env()
+    {
+        if (_destroy_env)
+        {
+            _destroy_env(arg);
         }
     }
     virtual void run_body()

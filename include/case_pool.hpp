@@ -25,6 +25,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "testUtil.hpp"
-shared_ptr<test_case_base> case_0001(new test_case_base(prepare_env_example, body_0001, destory_env_example));
-shared_ptr<test_case_base> case_0002(new test_case_base(prepare_env_example, body_0001, destory_env_example));
-shared_ptr<test_case_base> case_0003(new test_case_base(prepare_env_example, body_0001, destory_env_example));
+#include "testEnv.hpp"
+shared_ptr<test_case_base> case_0001(new test_case_base(prepare_env_example, body_0001, destroy_env_example));
+shared_ptr<test_case_base> case_0002(new test_case_base(prepare_env_example, body_0001, destroy_env_example));
+shared_ptr<test_case_base> case_0003(new test_case_base(prepare_env_example_001, body_0001, destroy_env_example));
