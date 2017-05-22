@@ -26,3 +26,5 @@
  */
 #include "testUtil.hpp"
 shared_ptr<test_case_base> case_0001(new test_case_base(prepare_env_example, body_0001, destory_env_example));
+shared_ptr<test_case_base> case_0002(new test_case_base(prepare_env_example, body_0001, destory_env_example));
+shared_ptr<test_case_base> case_0003(new test_case_base(prepare_env_example, body_0001, destory_env_example));

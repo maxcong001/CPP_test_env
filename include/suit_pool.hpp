@@ -26,3 +26,5 @@
  */
 #include "testUtil.hpp"
 shared_ptr<test_suit_base> suit_0001(new test_suit_base());
+shared_ptr<test_suit_base> suit_0002(new test_suit_base());
+shared_ptr<test_suit_base> suit_0003(new test_suit_base());
