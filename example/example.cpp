@@ -49,4 +49,21 @@ int main()
     project_instance->run();
     // destroy the project instance
     Singleton<test_project_base>::DestroyInstance();
+    // dump result
+    int pass = 0;
+    for (auto i : RESULT_MAP)
+    {
+        string result;
+        if (i.second == CASE_SUCCESS)
+        {
+            result = "SUCCESS";
+            pass++;
+        }
+        else
+        {
+            result = "FAIL";
+        }
+        cout<< "case body : "<<i.first<<" result is :"<< result<<endl;
+    }
+    cout << "total run " << RESULT_MAP.size() << " cases, " << result << " pass" << endl;
 }
