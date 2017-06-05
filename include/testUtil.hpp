@@ -41,13 +41,32 @@
 #include "NonCopyable.hpp"
 #include "singleton.hpp"
 
-
 using namespace std;
 /*
 typedef std::function<void(void *)> TEST_BODY_FUNCTION;
 typedef std::function<void *()> TEST_PREPARE_FUNCTION;
 typedef std::function<void(void *)> TEST_DESTROY_FUNCTION;
 */
-typedef void (* TEST_BODY_FUNCTION)(void *);
-typedef void *(* TEST_PREPARE_FUNCTION)();
-typedef void (* TEST_DESTROY_FUNCTION)(void *);
+typedef void (*TEST_BODY_FUNCTION)(void *);
+typedef void *(*TEST_PREPARE_FUNCTION)();
+typedef void (*TEST_DESTROY_FUNCTION)(void *);
+
+enum case_result
+{
+    CASE_SUCCESS = 0,
+    CASE_RUNNING,
+    CASE_FAIL
+
+};
+// case name and case result map, this will be read after all the case done.
+// when after a case run, should put the case name and case pass, waiting , fail info to the map.
+typedef std::map<std::string, case_result> RESULT_MAP;
+//  NOTE: before using this template, you should write operator ==.
+//  this is for sync compare result
+//  to do: maybe use case class instance as arg, then print the case name and case info.
+template <typename EXP_RESULT, typename REL_RESULT>
+void EXCEPT_EQ(EXP_RESULT &&except_result, REL_RESULT &&real_result, string case_name)
+{
+    RESULT_MAP.emplace_back(case_name, ((except_result == real_result) ? CASE_SUCCESS : CASE_FAIL));
+}
+// to do: async result calculate
