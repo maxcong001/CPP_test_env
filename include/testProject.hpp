@@ -26,22 +26,18 @@
  */
 #include "testUtil.hpp"
 
-class test_project_base
-{
-  public:
-    void add_suit(std::shared_ptr<test_suit_base> test_suit)
-    {
-        _suit[suitID] = test_suit;
-        suitID++;
+class test_project_base {
+ public:
+  void add_suit(std::shared_ptr<test_suit_base> test_suit) {
+    _suit[suitID] = test_suit;
+    suitID++;
+  }
+  void run() {
+    for (auto i : _suit) {
+      ADD_SUIT_INFO((i.second)->get_name());
+      (i.second)->run();
     }
-    void run()
-    {
-      
-      for (auto i : _suit) {
-        ADD_SUIT_INFO((i.second)->get_name());
-        (i.second)->run();
-        }
-    }
-    int suitID;
-    std::unordered_map<int, std::shared_ptr<test_suit_base> > _suit;
+  }
+  int suitID;
+  std::unordered_map<int, std::shared_ptr<test_suit_base> > _suit;
 };

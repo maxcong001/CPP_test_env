@@ -67,6 +67,6 @@ int main() {
     cout << "case name : " << std::get<0>(i) << " result is :" << result
          << endl;
   }
-  cout << "total run " << (pass + fail) << " cases, " << pass << " case pass"
-       << endl;
+  cout << "total run " << (pass + fail) << " cases, " << pass << " cases pass"
+       << ", cases fail " << fail << endl;
 }

@@ -42,9 +42,6 @@
 
 using namespace std;
 
-
-
-
 enum case_result {
   CASE_SUCCESS = 0,
   CASE_RUNNING,
@@ -61,7 +58,6 @@ typedef std::function<void(void *)> TEST_DESTROY_FUNCTION;
 typedef case_result (*TEST_BODY_FUNCTION)(void *);
 typedef void *(*TEST_PREPARE_FUNCTION)();
 typedef void (*TEST_DESTROY_FUNCTION)(void *);
-
 
 typedef std::tuple<std::string, case_result> RESULT_TUPLE;
 // case name and case result list, this will be read after all the case done.
