@@ -68,5 +68,5 @@ int main() {
          << endl;
   }
   cout << "total run " << (pass + fail) << " cases, " << pass << " cases pass"
-       << ", cases fail " << fail << endl;
+       << ", " << fail << " cases fail " << endl;
 }

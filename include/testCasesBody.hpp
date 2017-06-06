@@ -33,6 +33,5 @@ case_result body_0001(void *arg) {
 }
 case_result body_0002(void *arg) {
   cout << "this is a test case body 0002" << endl;
-  cout << EXCEPT_EQ("test", "tes1t") << "Maxx" << endl;
   return EXCEPT_EQ("test", "tes1t");
 }
