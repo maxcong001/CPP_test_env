@@ -48,7 +48,7 @@ class test_suit_base : NonCopyable,
       for (auto k : (j.second)) {
         cout << k->_case_info << endl;
         k->set_arg(tmp_arg);
-        k->run_body();
+        REC_RESULT(k->run_body(), k->_case_name);
         // this will called every time. can optimise
         // Humm, do it later, this will not cost much time
         to_destroy = k->get_destroy_func();

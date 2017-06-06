@@ -58,13 +58,13 @@ int main() {
       result = "SUCCESS";
       pass++;
     } else if (std::get<1>(i) == CASE_STUB) {
-      cout << "now running suit : " << std::get<0>(i)<<endl;
+      cout << "now showing the result under suit : " << std::get<0>(i) << endl;
       continue;
     } else {
       fail++;
       result = "FAIL";
     }
-    cout << "case body : " << std::get<0>(i) << " result is :" << result
+    cout << "case name : " << std::get<0>(i) << " result is :" << result
          << endl;
   }
   cout << "total run " << (pass + fail) << " cases, " << pass << " case pass"
