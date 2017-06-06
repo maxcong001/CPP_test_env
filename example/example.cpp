@@ -24,46 +24,49 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "testInclude.hpp"
+
 class test_project_base;
-int main()
-{
-    // prepare suit here
-    suit_0001->addCase(case_0001);
-    suit_0001->addCase(case_0002);
-    suit_0001->addCase(case_0001);
-    suit_0001->addCase(case_0003);
-    suit_0001->addCase(case_0001);
-    suit_0002->addCase(case_0001);
-    suit_0002->addCase(case_0003);
-    suit_0002->addCase(case_0001);
-    suit_0002->addCase(case_0001);
-    suit_0003->addCase(case_0002);
-    suit_0003->addCase(case_0001);
-    // get project instance
-    auto project_instance = Singleton<test_project_base>::Instance();
-    // add your suit here
-    project_instance->add_suit(suit_0001);
-    project_instance->add_suit(suit_0002);
-    project_instance->add_suit(suit_0003);
-    // run!
-    project_instance->run();
-    // destroy the project instance
-    Singleton<test_project_base>::DestroyInstance();
-    // dump result
-    int pass = 0;
-    for (auto i : RESULT_MAP)
-    {
-        string result;
-        if (i.second == CASE_SUCCESS)
-        {
-            result = "SUCCESS";
-            pass++;
-        }
-        else
-        {
-            result = "FAIL";
-        }
-        cout<< "case body : "<<i.first<<" result is :"<< result<<endl;
+int main() {
+  // prepare suit here
+  suit_0001->addCase(case_0001);
+  suit_0001->addCase(case_0002);
+  suit_0001->addCase(case_0001);
+  suit_0001->addCase(case_0003);
+  suit_0001->addCase(case_0001);
+  suit_0002->addCase(case_0001);
+  suit_0002->addCase(case_0003);
+  suit_0002->addCase(case_0001);
+  suit_0002->addCase(case_0001);
+  suit_0003->addCase(case_0002);
+  suit_0003->addCase(case_0001);
+  // get project instance
+  auto project_instance = Singleton<test_project_base>::Instance();
+  // add your suit here
+  project_instance->add_suit(suit_0001);
+  project_instance->add_suit(suit_0002);
+  project_instance->add_suit(suit_0003);
+  // run!
+  project_instance->run();
+  // destroy the project instance
+  Singleton<test_project_base>::DestroyInstance();
+  // dump result
+  int pass = 0;
+  int fail = 0;
+  for (auto i : case_reslut_list) {
+    string result;
+    if (std::get<1>(i) == CASE_SUCCESS) {
+      result = "SUCCESS";
+      pass++;
+    } else if (std::get<1>(i) == CASE_STUB) {
+      cout << "now running suit : " << std::get<0>(i)<<endl;
+      continue;
+    } else {
+      fail++;
+      result = "FAIL";
     }
-    cout << "total run " << RESULT_MAP.size() << " cases, " << result << " pass" << endl;
+    cout << "case body : " << std::get<0>(i) << " result is :" << result
+         << endl;
+  }
+  cout << "total run " << (pass + fail) << " cases, " << pass << " case pass"
+       << endl;
 }

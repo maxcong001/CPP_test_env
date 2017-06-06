@@ -24,25 +24,29 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include <iostream>
-#include <vector>
-#include <chrono>
-#include <map>
-#include <thread>
-#include <string>
-#include <tuple>
-#include <condition_variable>
-#include <mutex>
 #include <stdlib.h>
 #include <time.h>
+#include <chrono>
+#include <condition_variable>
+#include <iostream>
+#include <list>
 #include <memory>
-#include <vector>
+#include <mutex>
+#include <string>
+#include <thread>
+#include <tuple>
 #include <unordered_map>
+#include <vector>
 #include "NonCopyable.hpp"
 #include "singleton.hpp"
 
 using namespace std;
-/*
+#define EXCEPT_EQ(except_result, real_result) {\
+string case_name(__func__);\
+EXCEPT_EQ_WITH_STRING(except_result, real_result, __func__);\
+}\
+
+/*EXCEPT_EQ
 typedef std::function<void(void *)> TEST_BODY_FUNCTION;
 typedef std::function<void *()> TEST_PREPARE_FUNCTION;
 typedef std::function<void(void *)> TEST_DESTROY_FUNCTION;
@@ -51,22 +55,32 @@ typedef void (*TEST_BODY_FUNCTION)(void *);
 typedef void *(*TEST_PREPARE_FUNCTION)();
 typedef void (*TEST_DESTROY_FUNCTION)(void *);
 
-enum case_result
-{
-    CASE_SUCCESS = 0,
-    CASE_RUNNING,
-    CASE_FAIL
+enum case_result {
+  CASE_SUCCESS = 0,
+  CASE_RUNNING,
+  CASE_STUB,
+  CASE_FAIL
 
 };
-// case name and case result map, this will be read after all the case done.
-// when after a case run, should put the case name and case pass, waiting , fail info to the map.
-typedef std::map<std::string, case_result> RESULT_MAP;
+typedef std::tuple<std::string, case_result> RESULT_TUPLE;
+// case name and case result list, this will be read after all the case done.
+// when after a case run, should put the case name and case pass, waiting , fail
+// info to the list.
+typedef std::list<RESULT_TUPLE> RESULT_LIST;
+
+RESULT_LIST case_reslut_list;
 //  NOTE: before using this template, you should write operator ==.
 //  this is for sync compare result
-//  to do: maybe use case class instance as arg, then print the case name and case info.
+//  to do: maybe use case class instance as arg, then print the case name and
+//  case info.
 template <typename EXP_RESULT, typename REL_RESULT>
-void EXCEPT_EQ(EXP_RESULT &&except_result, REL_RESULT &&real_result, string case_name)
-{
-    RESULT_MAP.emplace_back(case_name, ((except_result == real_result) ? CASE_SUCCESS : CASE_FAIL));
+void EXCEPT_EQ_WITH_STRING(EXP_RESULT &&except_result, REL_RESULT &&real_result,
+                           string case_name) {
+  case_reslut_list.emplace_back(
+      std::make_tuple(case_name, ((except_result == real_result) ? CASE_SUCCESS : CASE_FAIL)));
+}
+
+void ADD_SUIT_INFO(string suit_name) {
+  case_reslut_list.emplace_back(std::make_tuple(suit_name, CASE_STUB));
 }
 // to do: async result calculate

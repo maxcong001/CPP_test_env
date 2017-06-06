@@ -25,42 +25,40 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "testUtil.hpp"
-class test_suit_base : NonCopyable, public std::enable_shared_from_this<test_suit_base>
-{
-  public:
-    void addCase(std::shared_ptr<test_case_base> test_case)
-    {
-        _cases[caseID] = test_case;
-        caseID++;
+class test_suit_base : NonCopyable,
+                       public std::enable_shared_from_this<test_suit_base> {
+ public:
+  test_suit_base(string name) { suit_name = name; }
+  void addCase(std::shared_ptr<test_case_base> test_case) {
+    _cases[caseID] = test_case;
+    caseID++;
+  }
+  std::shared_ptr<test_suit_base> getSelf() { return shared_from_this(); }
+  void run() {
+    std::unordered_map<TEST_PREPARE_FUNCTION,
+                       std::vector<std::shared_ptr<test_case_base> > >
+        fun_cases_map;
+    for (auto i : _cases) {
+      (fun_cases_map[(i.second)->get_prepare_func()]).emplace_back(i.second);
     }
-    std::shared_ptr<test_suit_base> getSelf()
-    {
-        return shared_from_this();
+    for (auto j : fun_cases_map) {
+      // prepare the env
+      void *tmp_arg = (j.first)();
+      TEST_DESTROY_FUNCTION to_destroy;
+      for (auto k : (j.second)) {
+        cout << k->_case_info << endl;
+        k->set_arg(tmp_arg);
+        k->run_body();
+        // this will called every time. can optimise
+        // Humm, do it later, this will not cost much time
+        to_destroy = k->get_destroy_func();
+      }
+      // destroy the env
+      to_destroy(tmp_arg);
     }
-    void run()
-    {
-        std::unordered_map<TEST_PREPARE_FUNCTION, std::vector<std::shared_ptr<test_case_base> > > fun_cases_map;
-        for (auto i : _cases)
-        {
-            (fun_cases_map[(i.second)->get_prepare_func()]).emplace_back(i.second);
-        }
-        for (auto j : fun_cases_map)
-        {
-            // prepare the env
-            void *tmp_arg = (j.first)();
-            TEST_DESTROY_FUNCTION to_destroy;
-            for (auto k : (j.second))
-            {
-                k->set_arg(tmp_arg);
-                k->run_body();
-                // this will called every time. can optimise
-                // Humm, do it later, this will not cost much time
-                to_destroy = k->get_destroy_func();
-            }
-            // destroy the env
-            to_destroy(tmp_arg);
-        }
-    }
-    int caseID;
-    std::unordered_map<int, std::shared_ptr<test_case_base> > _cases;
+  }
+  string get_name() { return suit_name; }
+  string suit_name;
+  int caseID;
+  std::unordered_map<int, std::shared_ptr<test_case_base> > _cases;
 };

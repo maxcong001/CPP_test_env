@@ -29,17 +29,19 @@
 class test_case_base : NonCopyable, public std::enable_shared_from_this<test_case_base>
 {
   public:
-    test_case_base(TEST_PREPARE_FUNCTION prepare_env_arg, TEST_BODY_FUNCTION body, TEST_DESTROY_FUNCTION destroy_env)
-    {
-        _prepare_env = prepare_env_arg;
-        _body = body;
-        _destroy_env = destroy_env;
-/*
-        if (_prepare_env)
-        {
-            arg = prepare_env();
-        }
-*/
+   test_case_base(TEST_PREPARE_FUNCTION prepare_env_arg,
+                  TEST_BODY_FUNCTION body, TEST_DESTROY_FUNCTION destroy_env,
+                  string case_info) {
+     _prepare_env = prepare_env_arg;
+     _body = body;
+     _destroy_env = destroy_env;
+     _case_info = case_info;
+     /*
+             if (_prepare_env)
+             {
+                 arg = prepare_env();
+             }
+     */
     }
     ~test_case_base()
     {
@@ -112,5 +114,5 @@ class test_case_base : NonCopyable, public std::enable_shared_from_this<test_cas
     TEST_DESTROY_FUNCTION _destroy_env;
     void *arg;
     string case_name;
-    string case_info;
+    string _case_info;
 };

@@ -29,7 +29,7 @@
 // info: this field should record the case info
 void body_0001(void *arg)
 {
-    EXCEPT_EQ("test","test", __func__);
-    cout << "this is a test case body" << endl;
+  EXCEPT_EQ("test", "test");
+  cout << "this is a test case body" << endl;
 
 }

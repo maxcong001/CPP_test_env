@@ -36,9 +36,10 @@ class test_project_base
     }
     void run()
     {
-        for (auto i : _suit)
-        {
-            (i.second)->run();
+      
+      for (auto i : _suit) {
+        ADD_SUIT_INFO((i.second)->get_name());
+        (i.second)->run();
         }
     }
     int suitID;
