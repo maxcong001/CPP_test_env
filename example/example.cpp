@@ -24,8 +24,11 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "testInclude.hpp"
+#include "suit_pool.hpp"
+#include "case_pool.hpp"
+#include "env_pool.hpp"
+#include "body_pool.hpp"
 
-class test_project_base;
 int main()
 {
 	// prepare suit here

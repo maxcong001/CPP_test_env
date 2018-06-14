@@ -34,7 +34,7 @@ class test_project_base
 		static test_project_base *ins = new test_project_base();
 		return ins;
 	}
-	static destroy(test_project_base *ins)
+	static void destroy(test_project_base *ins)
 	{
 		if (ins)
 		{

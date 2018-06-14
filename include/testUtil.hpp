@@ -39,8 +39,21 @@
 #include <vector>
 #include "NonCopyable.hpp"
 
-
 using namespace std;
+/*
+3/4 bit
+https://en.wikipedia.org/wiki/ANSI_escape_code
+*/
+static const char black[] = {0x1b, '[', '1', ';', '3', '0', 'm', 0};
+static const char red[] = {0x1b, '[', '1', ';', '3', '1', 'm', 0};
+static const char green[] = {0x1b, '[', '1', ';', '3', '2', 'm', 0};
+static const char yellow[] = {0x1b, '[', '1', ';', '3', '3', 'm', 0};
+static const char blue[] = {0x1b, '[', '1', ';', '3', '4', 'm', 0};
+static const char magenta[] = {0x1b, '[', '1', ';', '3', '5', 'm', 0};
+static const char cyan[] = {0x1b, '[', '1', ';', '3', '6', 'm', 0};
+static const char white[] = {0x1b, '[', '1', ';', '3', '7', 'm', 0};
+
+static const char normal[] = {0x1b, '[', '0', ';', '3', '9', 'm', 0};
 
 enum case_result
 {

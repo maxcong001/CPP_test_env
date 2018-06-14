@@ -25,6 +25,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "testInclude.hpp"
+#include "env_pool.hpp"
+#include "body_pool.hpp"
 shared_ptr<test_case_base> case_0001(
 	new test_case_base(prepare_env_example, body_0001, destroy_env_example,
 					   "case_0001", "case info "));
