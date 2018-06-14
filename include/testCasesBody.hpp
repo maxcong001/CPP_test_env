@@ -27,11 +27,13 @@
 #include "testUtil.hpp"
 // name: dbw_001
 // info: this field should record the case info
-case_result body_0001(void *arg) {
-  cout << "this is a test case body" << endl;
-  return EXCEPT_EQ("test", "test");
+case_result body_0001(void *arg)
+{
+	cout << "this is a test case body" << endl;
+	return EXCEPT_EQ("test", "test");
 }
-case_result body_0002(void *arg) {
-  cout << "this is a test case body 0002" << endl;
-  return EXCEPT_EQ("test", "tes1t");
+case_result body_0002(void *arg)
+{
+	cout << "this is a test case body 0002" << endl;
+	return EXCEPT_EQ("test", "tes1t");
 }

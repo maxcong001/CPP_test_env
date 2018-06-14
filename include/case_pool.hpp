@@ -27,11 +27,11 @@
 #include "testEnv.hpp"
 #include "testUtil.hpp"
 shared_ptr<test_case_base> case_0001(
-    new test_case_base(prepare_env_example, body_0001, destroy_env_example,
-                       "case_0001", "case info "));
+	new test_case_base(prepare_env_example, body_0001, destroy_env_example,
+					   "case_0001", "case info "));
 shared_ptr<test_case_base> case_0002(
-    new test_case_base(prepare_env_example, body_0001, destroy_env_example,
-                       "case_0002", "case info "));
+	new test_case_base(prepare_env_example, body_0001, destroy_env_example,
+					   "case_0002", "case info "));
 shared_ptr<test_case_base> case_0003(
-    new test_case_base(prepare_env_example_001, body_0002, destroy_env_example,
-                       "case_0003", "case info "));
+	new test_case_base(prepare_env_example_001, body_0002, destroy_env_example,
+					   "case_0003", "case info "));

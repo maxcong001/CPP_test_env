@@ -24,9 +24,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-class NonCopyable {
- public:
-  NonCopyable(const NonCopyable &) = delete;             // deleted
-  NonCopyable &operator=(const NonCopyable &) = delete;  // deleted
-  NonCopyable() = default;  // available will change to delete
+class NonCopyable
+{
+  public:
+	NonCopyable(const NonCopyable &) = delete;			  // deleted
+	NonCopyable &operator=(const NonCopyable &) = delete; // deleted
+	NonCopyable() = default;							  // available will change to delete
 };

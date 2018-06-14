@@ -25,20 +25,24 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "testUtil.hpp"
-void *prepare_env_example() {
-  std::cout << "prepare env is called" << std::endl;
-  return NULL;
+void *prepare_env_example()
+{
+	std::cout << "prepare env is called" << std::endl;
+	return NULL;
 }
-void *prepare_env_example_001() {
-  std::cout << "prepare 001 env is called" << std::endl;
-  return NULL;
+void *prepare_env_example_001()
+{
+	std::cout << "prepare 001 env is called" << std::endl;
+	return NULL;
 }
-void destroy_env_example(void *arg) {
-  // note: in your destroy function, you should set the arg to NULL
-  if (arg) {
-    // your destroy code should write here
+void destroy_env_example(void *arg)
+{
+	// note: in your destroy function, you should set the arg to NULL
+	if (arg)
+	{
+		// your destroy code should write here
 
-    arg = NULL;
-  }
-  std::cout << "destroy env is called" << std::endl;
+		arg = NULL;
+	}
+	std::cout << "destroy env is called" << std::endl;
 }

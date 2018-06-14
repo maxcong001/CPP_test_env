@@ -42,11 +42,12 @@
 
 using namespace std;
 
-enum case_result {
-  CASE_SUCCESS = 0,
-  CASE_RUNNING,
-  CASE_STUB,
-  CASE_FAIL
+enum case_result
+{
+	CASE_SUCCESS = 0,
+	CASE_RUNNING,
+	CASE_STUB,
+	CASE_FAIL
 
 };
 /*
@@ -71,14 +72,46 @@ RESULT_LIST case_reslut_list;
 //  to do: maybe use case class instance as arg, then print the case name and
 //  case info.
 template <typename EXP_RESULT, typename REL_RESULT>
-case_result EXCEPT_EQ(EXP_RESULT &&except_result, REL_RESULT &&real_result) {
-  return ((except_result == real_result) ? CASE_SUCCESS : CASE_FAIL);
+case_result EXCEPT_EQ(EXP_RESULT &&except_result, REL_RESULT &&real_result)
+{
+	return ((except_result == real_result) ? CASE_SUCCESS : CASE_FAIL);
 }
 
-void REC_RESULT(case_result result, string case_name) {
-  case_reslut_list.emplace_back(std::make_tuple(case_name, result));
+void REC_RESULT(case_result result, string case_name)
+{
+	case_reslut_list.emplace_back(std::make_tuple(case_name, result));
 }
-void ADD_SUIT_INFO(string suit_name) {
-  case_reslut_list.emplace_back(std::make_tuple(suit_name, CASE_STUB));
+void ADD_SUIT_INFO(string suit_name)
+{
+	case_reslut_list.emplace_back(std::make_tuple(suit_name, CASE_STUB));
+}
+
+void DUMP_RESULT()
+{
+	int pass = 0;
+	int fail = 0;
+	for (auto i : case_reslut_list)
+	{
+		string result;
+		if (std::get<1>(i) == CASE_SUCCESS)
+		{
+			result = "SUCCESS";
+			pass++;
+		}
+		else if (std::get<1>(i) == CASE_STUB)
+		{
+			cout << "now showing the result under suit : " << std::get<0>(i) << endl;
+			continue;
+		}
+		else
+		{
+			fail++;
+			result = "FAIL";
+		}
+		cout << "case name : " << std::get<0>(i) << " result is :" << result
+			 << endl;
+	}
+	cout << "total run " << (pass + fail) << " cases, " << pass << " cases pass"
+		 << ", " << fail << " cases fail " << endl;
 }
 // to do: async result calculate
