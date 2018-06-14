@@ -29,6 +29,19 @@
 class test_project_base
 {
   public:
+	static test_project_base *instance()
+	{
+		static test_project_base *ins = new test_project_base();
+		return ins;
+	}
+	static destroy(test_project_base *ins)
+	{
+		if (ins)
+		{
+			delete ins;
+			ins = NULL;
+		}
+	}
 	void add_suit(std::shared_ptr<test_suit_base> test_suit)
 	{
 		_suit[suitID] = test_suit;

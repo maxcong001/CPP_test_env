@@ -24,16 +24,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "testUtil.hpp"
-// name: dbw_001
-// info: this field should record the case info
-case_result body_0001(void *arg)
-{
-	cout << "this is a test case body" << endl;
-	return EXCEPT_EQ("test", "test");
-}
-case_result body_0002(void *arg)
-{
-	cout << "this is a test case body 0002" << endl;
-	return EXCEPT_EQ("test", "tes1t");
-}
+#include "testInclude.hpp"
+shared_ptr<test_case_base> case_0001(
+	new test_case_base(prepare_env_example, body_0001, destroy_env_example,
+					   "case_0001", "case info "));
+shared_ptr<test_case_base> case_0002(
+	new test_case_base(prepare_env_example, body_0001, destroy_env_example,
+					   "case_0002", "case info "));
+shared_ptr<test_case_base> case_0003(
+	new test_case_base(prepare_env_example_001, body_0002, destroy_env_example,
+					   "case_0003", "case info "));

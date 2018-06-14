@@ -24,7 +24,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "testUtil.hpp"
+#include "testInclude.hpp"
 shared_ptr<test_suit_base> suit_0001(new test_suit_base("suit001"));
 shared_ptr<test_suit_base> suit_0002(new test_suit_base("suit002"));
 shared_ptr<test_suit_base> suit_0003(new test_suit_base("suit003"));
