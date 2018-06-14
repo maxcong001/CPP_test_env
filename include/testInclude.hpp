@@ -23,11 +23,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "testEnv.hpp"
+
 #include "testCases.hpp"
-#include "testCasesBody.hpp"
+
 #include "testSuit.hpp"
 #include "testUtil.hpp"
-#include "case_pool.hpp"
-#include "suit_pool.hpp"
+
 #include "testProject.hpp"

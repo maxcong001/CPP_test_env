@@ -24,8 +24,11 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "testInclude.hpp"
+#include "suit_pool.hpp"
+#include "case_pool.hpp"
+#include "env_pool.hpp"
+#include "body_pool.hpp"
 
-class test_project_base;
 int main()
 {
 	// prepare suit here
@@ -41,7 +44,7 @@ int main()
 	suit_0003->addCase(case_0002);
 	suit_0003->addCase(case_0001);
 	// get project instance
-	auto project_instance = Singleton<test_project_base>::Instance();
+	auto project_instance = test_project_base::instance();
 	// add your suit here
 	project_instance->add_suit(suit_0001);
 	project_instance->add_suit(suit_0002);
@@ -49,7 +52,7 @@ int main()
 	// run!
 	project_instance->run();
 	// destroy the project instance
-	Singleton<test_project_base>::DestroyInstance();
+	test_project_base::destroy(project_instance);
 	// dump result
 	DUMP_RESULT();
 }

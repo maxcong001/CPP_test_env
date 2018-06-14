@@ -38,9 +38,22 @@
 #include <unordered_map>
 #include <vector>
 #include "NonCopyable.hpp"
-#include "singleton.hpp"
 
 using namespace std;
+/*
+3/4 bit
+https://en.wikipedia.org/wiki/ANSI_escape_code
+*/
+static const char black[] = {0x1b, '[', '1', ';', '3', '0', 'm', 0};
+static const char red[] = {0x1b, '[', '1', ';', '3', '1', 'm', 0};
+static const char green[] = {0x1b, '[', '1', ';', '3', '2', 'm', 0};
+static const char yellow[] = {0x1b, '[', '1', ';', '3', '3', 'm', 0};
+static const char blue[] = {0x1b, '[', '1', ';', '3', '4', 'm', 0};
+static const char magenta[] = {0x1b, '[', '1', ';', '3', '5', 'm', 0};
+static const char cyan[] = {0x1b, '[', '1', ';', '3', '6', 'm', 0};
+static const char white[] = {0x1b, '[', '1', ';', '3', '7', 'm', 0};
+
+static const char normal[] = {0x1b, '[', '0', ';', '3', '9', 'm', 0};
 
 enum case_result
 {
@@ -66,7 +79,6 @@ typedef std::tuple<std::string, case_result> RESULT_TUPLE;
 // info to the list.
 typedef std::list<RESULT_TUPLE> RESULT_LIST;
 
-RESULT_LIST case_reslut_list;
 //  NOTE: before using this template, you should write operator ==.
 //  this is for sync compare result
 //  to do: maybe use case class instance as arg, then print the case name and
@@ -77,41 +89,10 @@ case_result EXCEPT_EQ(EXP_RESULT &&except_result, REL_RESULT &&real_result)
 	return ((except_result == real_result) ? CASE_SUCCESS : CASE_FAIL);
 }
 
-void REC_RESULT(case_result result, string case_name)
-{
-	case_reslut_list.emplace_back(std::make_tuple(case_name, result));
-}
-void ADD_SUIT_INFO(string suit_name)
-{
-	case_reslut_list.emplace_back(std::make_tuple(suit_name, CASE_STUB));
-}
+void REC_RESULT(case_result result, string case_name);
 
-void DUMP_RESULT()
-{
-	int pass = 0;
-	int fail = 0;
-	for (auto i : case_reslut_list)
-	{
-		string result;
-		if (std::get<1>(i) == CASE_SUCCESS)
-		{
-			result = "SUCCESS";
-			pass++;
-		}
-		else if (std::get<1>(i) == CASE_STUB)
-		{
-			cout << "now showing the result under suit : " << std::get<0>(i) << endl;
-			continue;
-		}
-		else
-		{
-			fail++;
-			result = "FAIL";
-		}
-		cout << "case name : " << std::get<0>(i) << " result is :" << result
-			 << endl;
-	}
-	cout << "total run " << (pass + fail) << " cases, " << pass << " cases pass"
-		 << ", " << fail << " cases fail " << endl;
-}
+void ADD_SUIT_INFO(string suit_name);
+
+void DUMP_RESULT();
+
 // to do: async result calculate
