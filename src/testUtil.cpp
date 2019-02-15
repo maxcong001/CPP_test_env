@@ -1,5 +1,9 @@
 #include "testUtil.hpp"
 #include <sstream>
+
+unsigned long sigIDMapping::current_id = 1;
+std::map<unsigned long, std::string> sigIDMapping::sig_id_map;
+
 std::string _SUCCESS = std::string("").append(green).append("SUCCESS").append(normal);
 std::string _FAIL = std::string("").append(red).append("FAIL").append(normal);
 std::map<std::string, std::map<std::string, std::map<std::string, case_result>>> case_reslut_container;
@@ -69,6 +73,10 @@ void DUMP_RESULT()
 void REC_RESULT(case_result result, unsigned long id)
 {
     std::string sig = sigIDMapping::get_sig(id);
+    REC_RESULT(result, sig);
+}
+void REC_RESULT(case_result result, std::string sig)
+{
     std::string project_name;
     std::string suit_name;
     std::string case_name;
@@ -85,6 +93,10 @@ void REC_RESULT(case_result result, unsigned long id)
 void REC_RESULT_FINAL(case_result result, unsigned long id)
 {
     std::string sig = sigIDMapping::get_sig(id);
+    REC_RESULT_FINAL(result, sig);
+}
+void REC_RESULT_FINAL(case_result result, std::string sig)
+{
     std::string project_name;
     std::string suit_name;
     std::string case_name;

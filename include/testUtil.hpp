@@ -91,7 +91,9 @@ case_result EXCEPT_EQ(EXP_RESULT &&except_result, REL_RESULT &&real_result)
 }
 
 void REC_RESULT(case_result result, unsigned long id);
+void REC_RESULT(case_result result, std::string sig);
 void REC_RESULT_FINAL(case_result result, unsigned long id);
+void REC_RESULT_FINAL(case_result result, std::string sig);
 
 void DUMP_RESULT();
 
@@ -100,7 +102,6 @@ class sigIDMapping
   public:
 	static unsigned long add(std::string sig)
 	{
-		
 		++current_id;
 		sig_id_map[current_id] = sig;
 		return current_id;
