@@ -36,24 +36,18 @@ int main()
 	// prepare suit here
 	suit_0001->addCase(case_0001);
 	suit_0001->addCase(case_0002);
-	suit_0001->addCase(case_0001);
 	suit_0001->addCase(case_0003);
-	suit_0001->addCase(case_0001);
-	suit_0001->addCase(case_0003);
-	suit_0001->addCase(case_0001);
 	suit_0001->addCase(case_0004);
 	suit_0001->addCase(case_0005);
 
-/*
-	suit_0002->addCase(case_0001);
-	suit_0002->addCase(case_0003);
-	suit_0002->addCase(case_0001);
-	suit_0002->addCase(case_0001);
+
+	suit_0002->addCase(case_0006);
+	suit_0002->addCase(case_0007);
 
 
-*/
-	suit_0003->addCase(case_0002);
-	suit_0003->addCase(case_0001);
+
+	suit_0003->addCase(case_0008);
+	suit_0003->addCase(case_0009);
 
 
 	// add your suit here

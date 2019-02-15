@@ -30,12 +30,13 @@ class test_suit_base : NonCopyable,
 {
   public:
 	test_suit_base() = delete;
-	test_suit_base(string name) { suit_name = name; }
+	test_suit_base(string name) { _suit_name = name; }
 	void addCase(std::shared_ptr<test_case_base> test_case)
 	{
 		_cases[test_case->get_case_name()] = test_case;
 		test_case->set_suit_name(get_suit_name());
-		test_case->set_project_name(get_project_name());
+		std::cout << "-----------------now add case to suit : " << get_suit_name() << ", case name is :" << test_case->get_case_name() << std::endl;
+		//test_case->set_project_name(get_project_name());
 	}
 	std::shared_ptr<test_suit_base> getSelf() { return shared_from_this(); }
 	void run()
@@ -47,16 +48,20 @@ class test_suit_base : NonCopyable,
 		{
 			(fun_cases_map[(i.second)->get_prepare_func()]).push_back(i.second);
 		}
+
 		for (auto j : fun_cases_map)
 		{
 			// prepare the env
 			void *tmp_arg = (j.first)();
 			TEST_DESTROY_FUNCTION to_destroy;
+			std::cout << "Maxx there are : " << j.second.size() << " cases in the suit : " << get_suit_name() << std::endl;
+
 			for (auto k : (j.second))
 			{
-				cout << k->_case_info << endl;
+				//cout << k->_case_info << endl;
 				k->set_arg(tmp_arg);
 				std::string sig = k->get_signature();
+				std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>now running case with sig : " << sig << std::endl;
 				REC_RESULT(k->run_body(sig), sig);
 				// this will called every time. can optimise
 				// Humm, do it later, this will not cost much time
@@ -66,14 +71,16 @@ class test_suit_base : NonCopyable,
 			to_destroy(tmp_arg);
 		}
 	}
-	string get_suit_name() { return suit_name; }
-	void set_suit_name()
+	string get_suit_name() { return _suit_name; }
+	void set_suit_name(std::string name)
 	{
+		_suit_name = name;
 		for (auto i : _cases)
 		{
 			(i.second)->set_suit_name(get_suit_name());
 		}
 	}
+
 	std::string get_project_name()
 	{
 		return _project_name;
@@ -83,10 +90,10 @@ class test_suit_base : NonCopyable,
 		_project_name = name;
 		for (auto i : _cases)
 		{
-			(i.second)->set_project_name(_project_name);
+			(i.second)->set_project_name(get_project_name());
 		}
 	}
-	std::string suit_name;
+	std::string _suit_name;
 	std::string _project_name;
 
 	std::unordered_map<std::string, std::shared_ptr<test_case_base>> _cases;

@@ -55,3 +55,10 @@ case_result body_0004(void *arg, std::string sig)
 	REC_RESULT_FINAL(CASE_FAIL, sig);
 	return CASE_SUCCESS;
 }
+case_result body_0005(void *arg, std::string sig)
+{
+	cout << "this is a test case body 0005, sig is : " << sig << endl;
+	std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	REC_RESULT_FINAL(CASE_SUCCESS, sig);
+	return CASE_SUCCESS;
+}

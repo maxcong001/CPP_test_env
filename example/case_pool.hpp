@@ -29,16 +29,28 @@
 #include "body_pool.hpp"
 shared_ptr<test_case_base> case_0001(
 	new test_case_base(prepare_env_example, body_0001, destroy_env_example,
-					   "case_0001", "case info "));
+					   "case_0001", "case info 001 "));
 shared_ptr<test_case_base> case_0002(
-	new test_case_base(prepare_env_example, body_0001, destroy_env_example,
-					   "case_0002", "case info "));
+	new test_case_base(prepare_env_example, body_0002, destroy_env_example,
+					   "case_0002", "case info 002"));
 shared_ptr<test_case_base> case_0003(
-	new test_case_base(prepare_env_example_001, body_0002, destroy_env_example,
-					   "case_0003", "case info "));
-shared_ptr<test_case_base> case_0004(
 	new test_case_base(prepare_env_example_001, body_0003, destroy_env_example,
-					   "case_0004", "case info "));
-shared_ptr<test_case_base> case_0005(
+					   "case_0003", "case info 003"));
+shared_ptr<test_case_base> case_0004(
 	new test_case_base(prepare_env_example_001, body_0004, destroy_env_example,
-					   "case_0005", "case info "));
+					   "case_0004", "case info 004"));
+shared_ptr<test_case_base> case_0005(
+	new test_case_base(prepare_env_example_001, body_0005, destroy_env_example,
+					   "case_0005", "case info 005"));
+shared_ptr<test_case_base> case_0006(
+	new test_case_base(prepare_env_example_001, body_0003, destroy_env_example,
+					   "case_0006", "case info 006"));
+shared_ptr<test_case_base> case_0007(
+	new test_case_base(prepare_env_example_001, body_0001, destroy_env_example,
+					   "case_0007", "case info 007"));
+shared_ptr<test_case_base> case_0008(
+	new test_case_base(prepare_env_example_001, body_0002, destroy_env_example,
+					   "case_0008", "case info 008"));
+shared_ptr<test_case_base> case_0009(
+	new test_case_base(prepare_env_example_001, body_0004, destroy_env_example,
+					   "case_0009", "case info 009"));

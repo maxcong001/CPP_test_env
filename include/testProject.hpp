@@ -47,7 +47,7 @@ class test_project_base
 			(i.second)->run();
 		}
 	}
-	void set_name(std::string name)
+	void set_project_name(std::string name)
 	{
 		_project_name = name;
 	}
