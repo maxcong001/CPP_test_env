@@ -64,6 +64,34 @@ class test_case_base : NonCopyable,
 	virtual void *get_arg() { return arg; }
 	virtual void set_arg(void *inArg) { arg = inArg; }
 
+	void set_case_name(std::string name)
+	{
+		_case_name = name;
+	}
+	std::string get_case_name()
+	{
+		return _case_name;
+	}
+	void set_suit_name(std::string name)
+	{
+		_suit_name = name;
+	}
+	std::string get_suit_name()
+	{
+		return _suit_name;
+	}
+	void set_project_name(std::string name)
+	{
+		_project_name = name;
+	}
+	std::string get_project_name()
+	{
+		return _project_name;
+	}
+	std::string get_signature()
+	{
+		return _project_name + ":" + _suit_name + ":" + _case_name;
+	}
 	virtual case_result run()
 	{
 		if (_prepare_env)
@@ -72,7 +100,7 @@ class test_case_base : NonCopyable,
 		}
 		if (_body)
 		{
-			return _body(arg);
+			return _body(arg, get_signature());
 		}
 		else
 		{
@@ -93,11 +121,11 @@ class test_case_base : NonCopyable,
 			_destroy_env(arg);
 		}
 	}
-	virtual case_result run_body()
+	virtual case_result run_body(std::string sig)
 	{
 		if (_body)
 		{
-			return _body(arg);
+			return _body(arg, sig);
 		}
 		else
 		{
@@ -110,6 +138,8 @@ class test_case_base : NonCopyable,
 	TEST_BODY_FUNCTION _body;
 	TEST_DESTROY_FUNCTION _destroy_env;
 	void *arg;
-	string _case_name;
-	string _case_info;
+	std::string _case_name;
+	std::string _suit_name;
+	std::string _project_name;
+	std::string _case_info;
 };

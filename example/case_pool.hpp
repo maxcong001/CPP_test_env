@@ -36,3 +36,9 @@ shared_ptr<test_case_base> case_0002(
 shared_ptr<test_case_base> case_0003(
 	new test_case_base(prepare_env_example_001, body_0002, destroy_env_example,
 					   "case_0003", "case info "));
+shared_ptr<test_case_base> case_0004(
+	new test_case_base(prepare_env_example_001, body_0003, destroy_env_example,
+					   "case_0004", "case info "));
+shared_ptr<test_case_base> case_0005(
+	new test_case_base(prepare_env_example_001, body_0004, destroy_env_example,
+					   "case_0005", "case info "));

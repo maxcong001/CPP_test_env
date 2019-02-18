@@ -32,6 +32,7 @@
 #include <list>
 #include <memory>
 #include <mutex>
+#include <map>
 #include <string>
 #include <thread>
 #include <tuple>
@@ -69,7 +70,7 @@ typedef std::function<void *()> TEST_PREPARE_FUNCTION;
 typedef std::function<void(void *)> TEST_DESTROY_FUNCTION;
 */
 
-typedef case_result (*TEST_BODY_FUNCTION)(void *);
+typedef case_result (*TEST_BODY_FUNCTION)(void *, std::string sig);
 typedef void *(*TEST_PREPARE_FUNCTION)();
 typedef void (*TEST_DESTROY_FUNCTION)(void *);
 
@@ -90,8 +91,9 @@ case_result EXCEPT_EQ(EXP_RESULT &&except_result, REL_RESULT &&real_result)
 }
 
 void REC_RESULT(case_result result, string case_name);
+void REC_RESULT_FINAL(case_result result, string case_name);
 
-void ADD_SUIT_INFO(string suit_name);
+
 
 void DUMP_RESULT();
 

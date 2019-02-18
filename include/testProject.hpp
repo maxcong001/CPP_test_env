@@ -29,32 +29,32 @@
 class test_project_base
 {
   public:
-	static test_project_base *instance()
+	test_project_base() = delete;
+	test_project_base(std::string name)
 	{
-		static test_project_base *ins = new test_project_base();
-		return ins;
+		_project_name = name;
 	}
-	static void destroy(test_project_base *ins)
-	{
-		if (ins)
-		{
-			delete ins;
-			ins = NULL;
-		}
-	}
+
 	void add_suit(std::shared_ptr<test_suit_base> test_suit)
 	{
-		_suit[suitID] = test_suit;
-		suitID++;
+		_suit[test_suit->get_suit_name()] = test_suit;
+		test_suit->set_project_name(get_project_name());
 	}
 	void run()
 	{
 		for (auto i : _suit)
 		{
-			ADD_SUIT_INFO((i.second)->get_name());
 			(i.second)->run();
 		}
 	}
-	int suitID;
-	std::unordered_map<int, std::shared_ptr<test_suit_base>> _suit;
+	void set_name(std::string name)
+	{
+		_project_name = name;
+	}
+	std::string get_project_name()
+	{
+		return _project_name;
+	}
+	std::string _project_name;
+	std::unordered_map<std::string, std::shared_ptr<test_suit_base>> _suit;
 };

@@ -24,8 +24,7 @@ file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp *.c)
 # Not compile test files into library
 IF(NOT ENABLE_TEST)
 	SET (TEST_CPP_LIST
-#		utils/MTestUtil.cpp
-		stub.cpp
+
 	)
 
 	list(REMOVE_ITEM SOURCES ${TEST_CPP_LIST})

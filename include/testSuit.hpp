@@ -29,11 +29,13 @@ class test_suit_base : NonCopyable,
 					   public std::enable_shared_from_this<test_suit_base>
 {
   public:
+	test_suit_base() = delete;
 	test_suit_base(string name) { suit_name = name; }
 	void addCase(std::shared_ptr<test_case_base> test_case)
 	{
-		_cases[caseID] = test_case;
-		caseID++;
+		_cases[test_case->get_case_name()] = test_case;
+		test_case->set_suit_name(get_suit_name());
+		test_case->set_project_name(get_project_name());
 	}
 	std::shared_ptr<test_suit_base> getSelf() { return shared_from_this(); }
 	void run()
@@ -43,7 +45,7 @@ class test_suit_base : NonCopyable,
 			fun_cases_map;
 		for (auto i : _cases)
 		{
-			(fun_cases_map[(i.second)->get_prepare_func()]).emplace_back(i.second);
+			(fun_cases_map[(i.second)->get_prepare_func()]).push_back(i.second);
 		}
 		for (auto j : fun_cases_map)
 		{
@@ -54,7 +56,8 @@ class test_suit_base : NonCopyable,
 			{
 				cout << k->_case_info << endl;
 				k->set_arg(tmp_arg);
-				REC_RESULT(k->run_body(), k->_case_name);
+				std::string sig = k->get_signature();
+				REC_RESULT(k->run_body(sig), sig);
 				// this will called every time. can optimise
 				// Humm, do it later, this will not cost much time
 				to_destroy = k->get_destroy_func();
@@ -63,8 +66,28 @@ class test_suit_base : NonCopyable,
 			to_destroy(tmp_arg);
 		}
 	}
-	string get_name() { return suit_name; }
-	string suit_name;
-	int caseID;
-	std::unordered_map<int, std::shared_ptr<test_case_base>> _cases;
+	string get_suit_name() { return suit_name; }
+	void set_suit_name()
+	{
+		for (auto i : _cases)
+		{
+			(i.second)->set_suit_name(get_suit_name());
+		}
+	}
+	std::string get_project_name()
+	{
+		return _project_name;
+	}
+	void set_project_name(std::string name)
+	{
+		_project_name = name;
+		for (auto i : _cases)
+		{
+			(i.second)->set_project_name(_project_name);
+		}
+	}
+	std::string suit_name;
+	std::string _project_name;
+
+	std::unordered_map<std::string, std::shared_ptr<test_case_base>> _cases;
 };

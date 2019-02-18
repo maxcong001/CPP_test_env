@@ -28,31 +28,41 @@
 #include "case_pool.hpp"
 #include "env_pool.hpp"
 #include "body_pool.hpp"
+#include <memory>
 
 int main()
 {
+	std::shared_ptr<test_project_base> project_sptr = std::make_shared<test_project_base>("test_project");
 	// prepare suit here
 	suit_0001->addCase(case_0001);
 	suit_0001->addCase(case_0002);
 	suit_0001->addCase(case_0001);
 	suit_0001->addCase(case_0003);
 	suit_0001->addCase(case_0001);
+	suit_0001->addCase(case_0003);
+	suit_0001->addCase(case_0001);
+	suit_0001->addCase(case_0004);
+	suit_0001->addCase(case_0005);
+
+/*
 	suit_0002->addCase(case_0001);
 	suit_0002->addCase(case_0003);
 	suit_0002->addCase(case_0001);
 	suit_0002->addCase(case_0001);
+
+
+*/
 	suit_0003->addCase(case_0002);
 	suit_0003->addCase(case_0001);
-	// get project instance
-	auto project_instance = test_project_base::instance();
+
+
 	// add your suit here
-	project_instance->add_suit(suit_0001);
-	project_instance->add_suit(suit_0002);
-	project_instance->add_suit(suit_0003);
+	project_sptr->add_suit(suit_0001);
+	project_sptr->add_suit(suit_0002);
+	project_sptr->add_suit(suit_0003);
 	// run!
-	project_instance->run();
-	// destroy the project instance
-	test_project_base::destroy(project_instance);
+	project_sptr->run();
+
 	// dump result
 	DUMP_RESULT();
 }
