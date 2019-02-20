@@ -85,7 +85,7 @@ class test_case_base : NonCopyable,
 		}
 		if (_body)
 		{
-			return _body(arg, get_signature());
+			return _body(arg, sigIDMapping::add(get_signature()));
 		}
 		else
 		{
@@ -110,7 +110,7 @@ class test_case_base : NonCopyable,
 	{
 		if (_body)
 		{
-			return _body(arg, sig);
+			return _body(arg, sigIDMapping::add(get_signature()));
 		}
 		else
 		{

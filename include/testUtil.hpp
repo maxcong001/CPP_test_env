@@ -70,7 +70,7 @@ typedef std::function<void *()> TEST_PREPARE_FUNCTION;
 typedef std::function<void(void *)> TEST_DESTROY_FUNCTION;
 */
 
-typedef case_result (*TEST_BODY_FUNCTION)(void *, std::string sig);
+typedef case_result (*TEST_BODY_FUNCTION)(void *, unsigned long id);
 typedef void *(*TEST_PREPARE_FUNCTION)();
 typedef void (*TEST_DESTROY_FUNCTION)(void *);
 
@@ -90,9 +90,30 @@ case_result EXCEPT_EQ(EXP_RESULT &&except_result, REL_RESULT &&real_result)
 	return ((except_result == real_result) ? CASE_SUCCESS : CASE_FAIL);
 }
 
-void REC_RESULT(case_result result, string case_name);
-void REC_RESULT_FINAL(case_result result, string case_name);
+void REC_RESULT(case_result result, unsigned long id);
+void REC_RESULT_FINAL(case_result result, unsigned long id);
 
 void DUMP_RESULT();
+
+class sigIDMapping
+{
+  public:
+	static unsigned long add(std::string sig)
+	{
+		
+		++current_id;
+		sig_id_map[current_id] = sig;
+		return current_id;
+	}
+	static std::string get_sig(unsigned long id)
+	{
+		return (sig_id_map.find(id) == sig_id_map.end()) ? "" : sig_id_map[id];
+	}
+
+  private:
+	static std::map<unsigned long, std::string> sig_id_map;
+
+	static unsigned long current_id;
+};
 
 // to do: async result calculate

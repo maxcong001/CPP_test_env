@@ -66,8 +66,9 @@ void DUMP_RESULT()
          << ", " << red << "[ " << fail << " ] cases fail " << normal << endl;
 }
 
-void REC_RESULT(case_result result, std::string sig)
+void REC_RESULT(case_result result, unsigned long id)
 {
+    std::string sig = sigIDMapping::get_sig(id);
     std::string project_name;
     std::string suit_name;
     std::string case_name;
@@ -81,8 +82,9 @@ void REC_RESULT(case_result result, std::string sig)
         case_reslut_container[project_name][suit_name][case_name] = result;
     }
 }
-void REC_RESULT_FINAL(case_result result, string sig)
+void REC_RESULT_FINAL(case_result result, unsigned long id)
 {
+    std::string sig = sigIDMapping::get_sig(id);
     std::string project_name;
     std::string suit_name;
     std::string case_name;
