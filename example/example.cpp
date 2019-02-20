@@ -23,6 +23,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 #include "testInclude.hpp"
 #include "suit_pool.hpp"
 #include "case_pool.hpp"
@@ -40,15 +41,11 @@ int main()
 	suit_0001->addCase(case_0004);
 	suit_0001->addCase(case_0005);
 
-
 	suit_0002->addCase(case_0006);
 	suit_0002->addCase(case_0007);
 
-
-
 	suit_0003->addCase(case_0008);
 	suit_0003->addCase(case_0009);
-
 
 	// add your suit here
 	project_sptr->add_suit(suit_0001);

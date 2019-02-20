@@ -93,8 +93,6 @@ case_result EXCEPT_EQ(EXP_RESULT &&except_result, REL_RESULT &&real_result)
 void REC_RESULT(case_result result, string case_name);
 void REC_RESULT_FINAL(case_result result, string case_name);
 
-
-
 void DUMP_RESULT();
 
 // to do: async result calculate

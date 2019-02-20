@@ -39,7 +39,7 @@ void DUMP_RESULT()
 
     for (auto project : case_reslut_container)
     {
-        cout << "now showing the result under project : " << magenta << project.first<<", total "<<project.second.size()<<" suit" << normal << endl;
+        cout << "now showing the result under project : " << magenta << project.first << ", total " << project.second.size() << " suit" << normal << endl;
         for (auto suit : project.second)
         {
             cout << "now showing the result under suit : " << magenta << suit.first << normal << endl;
