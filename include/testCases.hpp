@@ -24,6 +24,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 #include "testUtil.hpp"
 //#include "testCasesBody.hpp"
 class test_case_base : NonCopyable,
@@ -32,7 +33,7 @@ class test_case_base : NonCopyable,
   public:
 	test_case_base(TEST_PREPARE_FUNCTION prepare_env_arg, TEST_BODY_FUNCTION body,
 				   TEST_DESTROY_FUNCTION destroy_env, string case_name,
-				   string case_info, bool is_async)
+				   string case_info, bool is_async = false)
 	{
 		_prepare_env = prepare_env_arg;
 		_body = body;
@@ -111,7 +112,7 @@ class test_case_base : NonCopyable,
 	{
 		if (_body)
 		{
-			if(_is_async)
+			if (_is_async)
 			{
 				async_cases.insert(sig);
 			}

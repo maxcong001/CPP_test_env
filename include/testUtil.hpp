@@ -36,6 +36,7 @@
 #include <set>
 #include <string>
 #include <thread>
+#include <future>
 #include <tuple>
 #include <unordered_map>
 #include <vector>
