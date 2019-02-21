@@ -1,13 +1,14 @@
 #include "testUtil.hpp"
 #include <sstream>
-
+#include <set>
 unsigned long sigIDMapping::current_id = 1;
 std::map<unsigned long, std::string> sigIDMapping::sig_id_map;
 
 std::string _SUCCESS = std::string("").append(green).append("SUCCESS").append(normal);
 std::string _FAIL = std::string("").append(red).append("FAIL").append(normal);
 std::map<std::string, std::map<std::string, std::map<std::string, case_result>>> case_reslut_container;
-
+std::set<std::string> async_cases;
+std::mutex result_mutex;
 std::vector<std::string> sig_split(const std::string &s, char delim)
 {
     std::vector<std::string> elems;
@@ -72,7 +73,11 @@ void DUMP_RESULT()
 
 void REC_RESULT(case_result result, unsigned long id)
 {
-    std::string sig = sigIDMapping::get_sig(id);
+    std::string sig;
+    {
+        std::unique_lock<std::mutex> lock(result_mutex);
+        sig = sigIDMapping::get_sig(id);
+    }
     REC_RESULT(result, sig);
 }
 void REC_RESULT(case_result result, std::string sig)
@@ -81,6 +86,7 @@ void REC_RESULT(case_result result, std::string sig)
     std::string suit_name;
     std::string case_name;
     std::tie(project_name, suit_name, case_name) = get_project_suit_case_name(sig);
+    std::unique_lock<std::mutex> lock(result_mutex);
     if (case_reslut_container.find(project_name) != case_reslut_container.end() && case_reslut_container[project_name].find(suit_name) != case_reslut_container[project_name].end() && case_reslut_container[project_name][suit_name].find(case_name) != case_reslut_container[project_name][suit_name].end())
     {
         std::cout << "there is already result for test case : " << sig << std::endl;
@@ -92,14 +98,21 @@ void REC_RESULT(case_result result, std::string sig)
 }
 void REC_RESULT_FINAL(case_result result, unsigned long id)
 {
-    std::string sig = sigIDMapping::get_sig(id);
+    std::string sig;
+    {
+        std::unique_lock<std::mutex> lock(result_mutex);
+        sig = sigIDMapping::get_sig(id);
+        async_cases.erase(sig);
+    }
     REC_RESULT_FINAL(result, sig);
 }
+
 void REC_RESULT_FINAL(case_result result, std::string sig)
 {
     std::string project_name;
     std::string suit_name;
     std::string case_name;
     std::tie(project_name, suit_name, case_name) = get_project_suit_case_name(sig);
+    std::unique_lock<std::mutex> lock(result_mutex);
     case_reslut_container[project_name][suit_name][case_name] = result;
 }

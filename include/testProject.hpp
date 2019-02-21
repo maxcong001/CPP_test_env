@@ -25,7 +25,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "testUtil.hpp"
-
+#include "threadPool.hpp"
+#include <utility>
 class test_project_base
 {
   public:
@@ -33,6 +34,8 @@ class test_project_base
 	test_project_base(std::string name)
 	{
 		_project_name = name;
+		int thread_num = std::thread::hardware_concurrency();
+		_thread_pool_sptr.reset(new ThreadPool(thread_num));
 	}
 
 	void add_suit(std::shared_ptr<test_suit_base> test_suit)
@@ -44,7 +47,8 @@ class test_project_base
 	{
 		for (auto i : _suit)
 		{
-			(i.second)->run();
+			std::function<void(void)> task = std::bind(&test_suit_base::run, i.second);
+			_thread_pool_sptr->enqueue(task);
 		}
 	}
 	void set_project_name(std::string name)
@@ -57,4 +61,5 @@ class test_project_base
 	}
 	std::string _project_name;
 	std::unordered_map<std::string, std::shared_ptr<test_suit_base>> _suit;
+	std::shared_ptr<ThreadPool> _thread_pool_sptr;
 };

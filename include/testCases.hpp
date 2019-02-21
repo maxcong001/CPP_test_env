@@ -32,7 +32,7 @@ class test_case_base : NonCopyable,
   public:
 	test_case_base(TEST_PREPARE_FUNCTION prepare_env_arg, TEST_BODY_FUNCTION body,
 				   TEST_DESTROY_FUNCTION destroy_env, string case_name,
-				   string case_info)
+				   string case_info, bool is_async = false)
 	{
 		_prepare_env = prepare_env_arg;
 		_body = body;
@@ -127,4 +127,5 @@ class test_case_base : NonCopyable,
 	std::string _suit_name;
 	std::string _project_name;
 	std::string _case_info;
+	bool _is_async;
 };

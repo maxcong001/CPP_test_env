@@ -97,4 +97,6 @@ class test_suit_base : NonCopyable,
 	std::string _project_name;
 
 	std::unordered_map<std::string, std::shared_ptr<test_case_base>> _cases;
+
+	std::vector<std::thread> workers;
 };
