@@ -33,6 +33,7 @@
 #include <memory>
 #include <mutex>
 #include <map>
+#include <set>
 #include <string>
 #include <thread>
 #include <tuple>
@@ -55,6 +56,9 @@ static const char cyan[] = {0x1b, '[', '1', ';', '3', '6', 'm', 0};
 static const char white[] = {0x1b, '[', '1', ';', '3', '7', 'm', 0};
 
 static const char normal[] = {0x1b, '[', '0', ';', '3', '9', 'm', 0};
+
+
+static std::set<std::string> async_cases;
 
 enum case_result
 {

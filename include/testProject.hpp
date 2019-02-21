@@ -48,7 +48,12 @@ class test_project_base
 		for (auto i : _suit)
 		{
 			std::function<void(void)> task = std::bind(&test_suit_base::run, i.second);
-			_thread_pool_sptr->enqueue(task);
+			_results.emplace_back(_thread_pool_sptr->enqueue(task));
+		}
+		// wait until all the cases done
+		for (auto &&result : _results)
+		{
+			result.get();
 		}
 	}
 	void set_project_name(std::string name)
@@ -62,4 +67,5 @@ class test_project_base
 	std::string _project_name;
 	std::unordered_map<std::string, std::shared_ptr<test_suit_base>> _suit;
 	std::shared_ptr<ThreadPool> _thread_pool_sptr;
+	std::vector<std::future<void>> _results;
 };

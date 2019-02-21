@@ -7,7 +7,7 @@ std::map<unsigned long, std::string> sigIDMapping::sig_id_map;
 std::string _SUCCESS = std::string("").append(green).append("SUCCESS").append(normal);
 std::string _FAIL = std::string("").append(red).append("FAIL").append(normal);
 std::map<std::string, std::map<std::string, std::map<std::string, case_result>>> case_reslut_container;
-std::set<std::string> async_cases;
+
 std::mutex result_mutex;
 std::vector<std::string> sig_split(const std::string &s, char delim)
 {
@@ -39,6 +39,10 @@ std::tuple<std::string, std::string, std::string> get_project_suit_case_name(std
 
 void DUMP_RESULT()
 {
+    while(!async_cases.empty())
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    }
     int pass = 0;
     int fail = 0;
 

@@ -53,7 +53,7 @@ int main()
 	project_sptr->add_suit(suit_0003);
 	// run!
 	project_sptr->run();
-	std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+	//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 	// dump result
 	DUMP_RESULT();
 }

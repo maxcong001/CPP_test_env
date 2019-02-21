@@ -32,13 +32,14 @@ class test_case_base : NonCopyable,
   public:
 	test_case_base(TEST_PREPARE_FUNCTION prepare_env_arg, TEST_BODY_FUNCTION body,
 				   TEST_DESTROY_FUNCTION destroy_env, string case_name,
-				   string case_info, bool is_async = false)
+				   string case_info, bool is_async)
 	{
 		_prepare_env = prepare_env_arg;
 		_body = body;
 		_destroy_env = destroy_env;
 		_case_info = case_info;
 		_case_name = case_name;
+		_is_async = is_async;
 	}
 	~test_case_base()
 	{
@@ -110,6 +111,10 @@ class test_case_base : NonCopyable,
 	{
 		if (_body)
 		{
+			if(_is_async)
+			{
+				async_cases.insert(sig);
+			}
 			return _body(arg, sigIDMapping::add(get_signature()));
 		}
 		else
