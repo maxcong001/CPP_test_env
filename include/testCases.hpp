@@ -83,6 +83,7 @@ class test_case_base : NonCopyable,
 		if (_body)
 		{
 			auto result_fut = _body->run(_arg, get_signature());
+			/*
 			std::chrono::seconds span(10);
 			if (result_fut.wait_for(span) == std::future_status::timeout)
 			{
@@ -90,6 +91,8 @@ class test_case_base : NonCopyable,
 				result_container::record_result_with_sig(CASE_TIMEOUT, get_signature());
 				return false;
 			}
+			*/
+			result_fut.wait();
 		}
 		else
 		{

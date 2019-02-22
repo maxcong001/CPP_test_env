@@ -57,8 +57,6 @@ static const char cyan[] = {0x1b, '[', '1', ';', '3', '6', 'm', 0};
 static const char white[] = {0x1b, '[', '1', ';', '3', '7', 'm', 0};
 static const char normal[] = {0x1b, '[', '0', ';', '3', '9', 'm', 0};
 
-
-
 std::string _SUCCESS = std::string("").append(green).append("SUCCESS").append(normal);
 std::string _FAIL = std::string("").append(red).append("FAIL").append(normal);
 
@@ -129,6 +127,7 @@ class result_container
 		}
 		else
 		{
+			std::cout << "set promise for case : " << sig << std::endl;
 			_case_promise_container[project_name][suit_name][case_name] = std::move(case_promise);
 		}
 		return true;
@@ -180,6 +179,7 @@ class result_container
 		}
 		else
 		{
+			//_case_promise_container[project_name][suit_name].emplace(sig, std::move());
 			std::cout << "there is no promise for test case : " << sig << std::endl;
 			return false;
 		}
@@ -207,6 +207,7 @@ class result_container
 					string result;
 
 					std::chrono::seconds span(10);
+					/*
 					if (one_case.second.wait_for(span) == std::future_status::timeout)
 					{
 						cout << "timeout waiting for the result of case : " << cyan << one_case.first << normal << endl;
@@ -214,18 +215,18 @@ class result_container
 						fail++;
 					}
 					else
+					{*/
+					if (one_case.second.get() == CASE_SUCCESS)
 					{
-						if (one_case.second.get() == CASE_SUCCESS)
-						{
-							result = _SUCCESS;
-							pass++;
-						}
-						else
-						{
-							result = _FAIL;
-							fail++;
-						}
+						result = _SUCCESS;
+						pass++;
 					}
+					else
+					{
+						result = _FAIL;
+						fail++;
+					}
+					//}
 					cout << "now showing the result of case : " << cyan << one_case.first << ", result is : " << result << normal << endl;
 				}
 			}

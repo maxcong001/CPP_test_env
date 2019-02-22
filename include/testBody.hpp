@@ -7,6 +7,8 @@ class test_body_base : NonCopyable,
     test_body_base() = delete;
     test_body_base(std::function<case_result(void *arg, unsigned long id)> func, bool is_async)
     {
+        _is_async = is_async;
+        _func = func;
     }
     bool _is_async;
     void set_is_async(bool is_async)
@@ -24,7 +26,7 @@ class test_body_base : NonCopyable,
         std::promise<case_result> result_promise;
         std::shared_future<case_result> result_future(result_promise.get_future());
         result_container::set_case_future(sig, result_future);
-
+        result_container::set_case_promise(sig, std::move(result_promise));
         if (get_is_async())
         {
             case_result result = _func(arg, case_id);
@@ -37,7 +39,7 @@ class test_body_base : NonCopyable,
         {
             result_container::record_result_with_sig(_func(arg, case_id), sig);
         }
-        result_container::set_case_promise(sig, std::move(result_promise));
+
         return result_future;
     }
     std::function<case_result(void *arg, unsigned long id)> _func;
