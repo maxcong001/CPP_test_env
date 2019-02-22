@@ -41,34 +41,16 @@ class test_suit_base : NonCopyable,
 	std::shared_ptr<test_suit_base> getSelf() { return shared_from_this(); }
 	void run()
 	{
-		std::unordered_map<TEST_PREPARE_FUNCTION,
-						   std::vector<std::shared_ptr<test_case_base>>>
-			fun_cases_map;
 		for (auto i : _cases)
 		{
-			(fun_cases_map[(i.second)->get_prepare_func()]).push_back(i.second);
+			std::function<bool(void)> task = std::bind(&test_case_base::run, i.second);
+			_results.emplace_back(ThreadPool::get_instance()->enqueue(task));
 		}
 
-		for (auto j : fun_cases_map)
+		// wait until all the cases done
+		for (auto &&result : _results)
 		{
-			// prepare the env
-			void *tmp_arg = (j.first)();
-			TEST_DESTROY_FUNCTION to_destroy;
-			std::cout << "Maxx there are : " << j.second.size() << " cases in the suit : " << get_suit_name() << std::endl;
-
-			for (auto k : (j.second))
-			{
-				//cout << k->_case_info << endl;
-				k->set_arg(tmp_arg);
-				std::string sig = k->get_signature();
-				std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>now running case with sig : " << sig << std::endl;
-				REC_RESULT(k->run_body(sig), sig);
-				// this will called every time. can optimise
-				// Humm, do it later, this will not cost much time
-				to_destroy = k->get_destroy_func();
-			}
-			// destroy the env
-			to_destroy(tmp_arg);
+			result.get();
 		}
 	}
 	string get_suit_name() { return _suit_name; }
@@ -98,5 +80,5 @@ class test_suit_base : NonCopyable,
 
 	std::unordered_map<std::string, std::shared_ptr<test_case_base>> _cases;
 
-	std::vector<std::thread> workers;
+	std::vector<std::future<bool>> _results;
 };

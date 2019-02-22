@@ -26,21 +26,19 @@
  */
 
 #include "testUtil.hpp"
+#include "testBody.hpp"
 //#include "testCasesBody.hpp"
 class test_case_base : NonCopyable,
 					   public std::enable_shared_from_this<test_case_base>
 {
   public:
-	test_case_base(TEST_PREPARE_FUNCTION prepare_env_arg, TEST_BODY_FUNCTION body,
-				   TEST_DESTROY_FUNCTION destroy_env, string case_name,
-				   string case_info, bool is_async = false)
+	test_case_base(TEST_PREPARE_FUNCTION prepare_env_arg, std::shared_ptr<test_body_base> body,
+				   TEST_DESTROY_FUNCTION destroy_env, string case_name)
 	{
 		_prepare_env = prepare_env_arg;
 		_body = body;
 		_destroy_env = destroy_env;
-		_case_info = case_info;
 		_case_name = case_name;
-		_is_async = is_async;
 	}
 	~test_case_base()
 	{
@@ -48,8 +46,8 @@ class test_case_base : NonCopyable,
 	TEST_PREPARE_FUNCTION get_prepare_func() { return _prepare_env; }
 	TEST_DESTROY_FUNCTION get_destroy_func() { return _destroy_env; }
 
-	virtual void *get_arg() { return arg; }
-	virtual void set_arg(void *inArg) { arg = inArg; }
+	virtual void *get_arg() { return _arg; }
+	virtual void set_arg(void *inArg) { _arg = inArg; }
 
 	void set_case_name(std::string name)
 	{
@@ -79,56 +77,50 @@ class test_case_base : NonCopyable,
 	{
 		return _project_name + ":" + _suit_name + ":" + _case_name;
 	}
-	virtual case_result run()
+	virtual bool run()
 	{
-		if (_prepare_env)
-		{
-			arg = _prepare_env();
-		}
+		prepare_env();
 		if (_body)
 		{
-			return _body(arg, sigIDMapping::add(get_signature()));
+			auto result_fut = _body->run(_arg, get_signature());
+			std::chrono::seconds span(10);
+			if (result_fut.wait_for(span) == std::future_status::timeout)
+			{
+				std::cout << "timeout(10S) waiting for case " << get_signature() << std::endl;
+				result_container::record_result_with_sig(CASE_TIMEOUT, get_signature());
+				return false;
+			}
 		}
 		else
 		{
-			return case_result::CASE_FAIL;
+			std::cout << "no test body in the case : " << get_signature() << std::endl;
+			result_container::record_result_with_sig(CASE_FAIL, get_signature());
+			return false;
 		}
+		destroy_env();
+		return true;
 	}
 	virtual void prepare_env()
 	{
 		if (_prepare_env)
 		{
-			arg = _prepare_env();
+			_arg = _prepare_env();
 		}
 	}
 	virtual void destroy_env()
 	{
 		if (_destroy_env)
 		{
-			_destroy_env(arg);
+			_destroy_env(_arg);
 		}
 	}
-	virtual case_result run_body(std::string sig)
-	{
-		if (_body)
-		{
-			if (_is_async)
-			{
-				async_cases.insert(sig);
-			}
-			return _body(arg, sigIDMapping::add(get_signature()));
-		}
-		else
-		{
-			return case_result::CASE_FAIL;
-		}
-	}
+
 	std::shared_ptr<test_case_base> getSelf() { return shared_from_this(); }
 
 	TEST_PREPARE_FUNCTION _prepare_env;
-	TEST_BODY_FUNCTION _body;
 	TEST_DESTROY_FUNCTION _destroy_env;
-	void *arg;
+	std::shared_ptr<test_body_base> _body;
+	void *_arg;
 	std::string _case_name;
 	std::string _suit_name;
 	std::string _project_name;

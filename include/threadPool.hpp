@@ -43,6 +43,12 @@ class ThreadPool
     auto enqueue(F &&f, Args &&... args) -> std::future<typename std::result_of<F(Args...)>::type>;
     ~ThreadPool();
 
+    static std::shared_ptr<ThreadPool> get_instance()
+    {
+        static std::shared_ptr<ThreadPool> ins_sptr = std::make_shared<ThreadPool>((std::thread::hardware_concurrency() > 0) ? (std::thread::hardware_concurrency()) : 1);
+        return ins_sptr;
+    }
+
   private:
     // need to keep track of threads so we can join them
     std::vector<std::thread> workers;

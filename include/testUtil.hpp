@@ -41,7 +41,7 @@
 #include <unordered_map>
 #include <vector>
 #include "NonCopyable.hpp"
-
+#include "threadPool.hpp"
 using namespace std;
 /*
 3/4 bit
@@ -55,36 +55,26 @@ static const char blue[] = {0x1b, '[', '1', ';', '3', '4', 'm', 0};
 static const char magenta[] = {0x1b, '[', '1', ';', '3', '5', 'm', 0};
 static const char cyan[] = {0x1b, '[', '1', ';', '3', '6', 'm', 0};
 static const char white[] = {0x1b, '[', '1', ';', '3', '7', 'm', 0};
-
 static const char normal[] = {0x1b, '[', '0', ';', '3', '9', 'm', 0};
 
 
-static std::set<std::string> async_cases;
+
+std::string _SUCCESS = std::string("").append(green).append("SUCCESS").append(normal);
+std::string _FAIL = std::string("").append(red).append("FAIL").append(normal);
 
 enum case_result
 {
 	CASE_SUCCESS = 0,
 	CASE_RUNNING,
+	CASE_TIMEOUT,
 	CASE_STUB,
 	CASE_FAIL
 
 };
-/*
-typedef std::function<void(void *)> TEST_BODY_FUNCTION;
-typedef std::function<void *()> TEST_PREPARE_FUNCTION;
-typedef std::function<void(void *)> TEST_DESTROY_FUNCTION;
-*/
 
-typedef case_result (*TEST_BODY_FUNCTION)(void *, unsigned long id);
 typedef void *(*TEST_PREPARE_FUNCTION)();
 typedef void (*TEST_DESTROY_FUNCTION)(void *);
-
-typedef std::tuple<std::string, case_result> RESULT_TUPLE;
-// case name and case result list, this will be read after all the case done.
-// when after a case run, should put the case name and case pass, waiting , fail
-// info to the list.
-typedef std::list<RESULT_TUPLE> RESULT_LIST;
-
+std::tuple<std::string, std::string, std::string> get_project_suit_case_name(std::string sig);
 //  NOTE: before using this template, you should write operator ==.
 //  this is for sync compare result
 //  to do: maybe use case class instance as arg, then print the case name and
@@ -95,31 +85,159 @@ case_result EXCEPT_EQ(EXP_RESULT &&except_result, REL_RESULT &&real_result)
 	return ((except_result == real_result) ? CASE_SUCCESS : CASE_FAIL);
 }
 
-void REC_RESULT(case_result result, unsigned long id);
-void REC_RESULT(case_result result, std::string sig);
-void REC_RESULT_FINAL(case_result result, unsigned long id);
-void REC_RESULT_FINAL(case_result result, std::string sig);
-
-void DUMP_RESULT();
-
 class sigIDMapping
 {
   public:
 	static unsigned long add(std::string sig)
 	{
+		std::unique_lock<std::mutex> lock(result_mutex);
 		++current_id;
 		sig_id_map[current_id] = sig;
 		return current_id;
 	}
 	static std::string get_sig(unsigned long id)
 	{
+		std::unique_lock<std::mutex> lock(result_mutex);
 		return (sig_id_map.find(id) == sig_id_map.end()) ? "" : sig_id_map[id];
 	}
 
   private:
 	static std::map<unsigned long, std::string> sig_id_map;
-
 	static unsigned long current_id;
+	static std::mutex result_mutex;
+};
+class result_container
+{
+  public:
+	static bool set_case_promise_with_id(unsigned long id, std::promise<case_result> &&case_promise)
+	{
+		std::string sig;
+		sig = sigIDMapping::get_sig(id);
+		return set_case_promise(sig, std::move(case_promise));
+	}
+	static bool set_case_promise(std::string sig, std::promise<case_result> &&case_promise)
+	{
+		std::unique_lock<std::mutex> lock(result_mutex);
+		std::string project_name;
+		std::string suit_name;
+		std::string case_name;
+		std::tie(project_name, suit_name, case_name) = get_project_suit_case_name(sig);
+		if (_case_promise_container.find(project_name) != _case_promise_container.end() && _case_promise_container[project_name].find(suit_name) != _case_promise_container[project_name].end() && _case_promise_container[project_name][suit_name].find(case_name) != _case_promise_container[project_name][suit_name].end())
+		{
+			std::cout << "there is already promise for test case : " << sig << std::endl;
+			return false;
+		}
+		else
+		{
+			_case_promise_container[project_name][suit_name][case_name] = std::move(case_promise);
+		}
+		return true;
+	}
+	static bool set_case_future_with_id(unsigned long id, std::future<case_result> &&case_future)
+	{
+		std::string sig;
+		sig = sigIDMapping::get_sig(id);
+		return set_case_future(sig, std::move(case_future));
+	}
+	static bool set_case_future(std::string sig, std::shared_future<case_result> case_future)
+	{
+		std::unique_lock<std::mutex> lock(result_mutex);
+		std::string project_name;
+		std::string suit_name;
+		std::string case_name;
+		std::tie(project_name, suit_name, case_name) = get_project_suit_case_name(sig);
+		if (_case_reslut_container.find(project_name) != _case_reslut_container.end() && _case_reslut_container[project_name].find(suit_name) != _case_reslut_container[project_name].end() && _case_reslut_container[project_name][suit_name].find(case_name) != _case_reslut_container[project_name][suit_name].end())
+		{
+			std::cout << "there is already future for test case : " << sig << std::endl;
+			return false;
+		}
+		else
+		{
+			_case_reslut_container[project_name][suit_name][case_name] = std::move(case_future);
+		}
+		return true;
+	}
+
+	static bool record_result_with_sig(case_result result, std::string sig)
+	{
+		std::unique_lock<std::mutex> lock(result_mutex);
+		std::string project_name;
+		std::string suit_name;
+		std::string case_name;
+		std::tie(project_name, suit_name, case_name) = get_project_suit_case_name(sig);
+
+		if (_case_promise_container.find(project_name) != _case_promise_container.end() && _case_promise_container[project_name].find(suit_name) != _case_promise_container[project_name].end() && _case_promise_container[project_name][suit_name].find(case_name) != _case_promise_container[project_name][suit_name].end())
+		{
+			try
+			{
+				_case_promise_container[project_name][suit_name][case_name].set_value(result);
+			}
+			catch (std::future_error &e)
+			{
+				std::cout << "the promise is already set!!!!" << std::endl;
+				return false;
+			}
+		}
+		else
+		{
+			std::cout << "there is no promise for test case : " << sig << std::endl;
+			return false;
+		}
+		return true;
+	}
+	static bool record_result_with_id(case_result result, unsigned long id)
+	{
+		std::string sig;
+		sig = sigIDMapping::get_sig(id);
+		return record_result_with_sig(result, sig);
+	}
+	static void dump_result()
+	{
+		int pass = 0;
+		int fail = 0;
+		std::unique_lock<std::mutex> lock(result_mutex);
+		for (auto project : _case_reslut_container)
+		{
+			cout << "now showing the result under project : " << magenta << project.first << ", total " << project.second.size() << " suit" << normal << endl;
+			for (auto suit : project.second)
+			{
+				cout << "now showing the result under suit : " << magenta << suit.first << normal << endl;
+				for (auto one_case : suit.second)
+				{
+					string result;
+
+					std::chrono::seconds span(10);
+					if (one_case.second.wait_for(span) == std::future_status::timeout)
+					{
+						cout << "timeout waiting for the result of case : " << cyan << one_case.first << normal << endl;
+						result = _FAIL;
+						fail++;
+					}
+					else
+					{
+						if (one_case.second.get() == CASE_SUCCESS)
+						{
+							result = _SUCCESS;
+							pass++;
+						}
+						else
+						{
+							result = _FAIL;
+							fail++;
+						}
+					}
+					cout << "now showing the result of case : " << cyan << one_case.first << ", result is : " << result << normal << endl;
+				}
+			}
+		}
+
+		cout << magenta << "total run [ " << (pass + fail) << " ] cases, " << normal << green << "[ " << pass << " ] cases pass" << normal
+			 << ", " << red << "[ " << fail << " ] cases fail " << normal << endl;
+	}
+
+	static std::map<std::string, std::map<std::string, std::map<std::string, std::shared_future<case_result>>>> _case_reslut_container;
+	static std::map<std::string, std::map<std::string, std::map<std::string, std::promise<case_result>>>> _case_promise_container;
+	static std::mutex result_mutex;
 };
 
 // to do: async result calculate
