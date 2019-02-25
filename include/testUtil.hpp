@@ -127,7 +127,7 @@ class result_container
 		}
 		else
 		{
-			std::cout << "set promise for case : " << sig << std::endl;
+			//std::cout << "set promise for case : " << sig << std::endl;
 			_case_promise_container[project_name][suit_name][case_name] = std::move(case_promise);
 		}
 		return true;
