@@ -1,17 +1,21 @@
 ## This is a test framework for CPP development.
 detail see the example.
+## dependancy   
+C++11
 ## how to new a case
 ```
-shared_ptr<test_case_base> case_0001(new test_case_base(prepare_env_example, body_0001, destroy_env_example, "case name", "case info "));
+shared_ptr<test_case_base> case_0001(
+	new test_case_base(prepare_env_example, body_0001, destroy_env_example,
+					   "case_0001"));
 ```
 ## how to new a suit 
 ```
-shared_ptr<test_suit_base> suit_0001(new test_suit_base("suit name"));
+shared_ptr<test_suit_base> suit_0001(new test_suit_base("suit001"));
 ```
 ## how to use:
 ### frist you will have a project, which is a singleton. 
 ```
-auto project_instance = Singleton<test_project_base>::Instance();
+std::shared_ptr<test_project_base> project_sptr = std::make_shared<test_project_base>("test_project");
 ```
 ### then you will have some suits, then add them to the project.
 ```
@@ -28,53 +32,21 @@ shared_ptr<test_case_base> case_0001(new test_case_base(prepare_env_example, bod
 
 ## here is some description about the log output:
 ```
-prepare env is called
-case info
-this is a test case body
-case info
-this is a test case body
-destroy env is called
-prepare 001 env is called
-case info
-this is a test case body 0002
-destroy env is called
-prepare env is called
-case info
-this is a test case body
-case info
-this is a test case body
-case info
-this is a test case body
-destroy env is called
-prepare 001 env is called
-case info
-this is a test case body 0002
-destroy env is called
-prepare env is called   <- this means prepare environment is called
-case info					<- this shows the test info
-this is a test case body <- this means the test body is called
-case info
-this is a test case body
-case info
-this is a test case body
-case info
-this is a test case body
-destroy env is called
-now showing the result under suit : suit003 <- this shows which suit.
-case name : case_0001 result is :SUCCESS     <- this shows case result
-case name : case_0002 result is :SUCCESS
-now showing the result under suit : suit002
-case name : case_0003 result is :FAIL
-case name : case_0001 result is :SUCCESS
-case name : case_0001 result is :SUCCESS
-case name : case_0001 result is :SUCCESS
+now showing the result under project : test_project, total 3 suit
 now showing the result under suit : suit001
-case name : case_0003 result is :FAIL
-case name : case_0001 result is :SUCCESS
-case name : case_0001 result is :SUCCESS
-case name : case_0002 result is :SUCCESS
-case name : case_0001 result is :SUCCESS
-total run 11 cases, 9 cases pass, 2 cases fail <- this shows the final result
+now showing the result of case : case_0001, result is : SUCCESS
+now showing the result of case : case_0002, result is : FAIL
+now showing the result of case : case_0003, result is : FAIL
+now showing the result of case : case_0004, result is : SUCCESS
+now showing the result of case : case_0005, result is : FAIL
+now showing the result under suit : suit002
+now showing the result of case : case_0006, result is : FAIL
+now showing the result of case : case_0007, result is : SUCCESS
+now showing the result under suit : suit003
+now showing the result of case : case_0008, result is : FAIL
+now showing the result of case : case_0009, result is : SUCCESS
+total run [ 9 ] cases, [ 4 ] cases pass, [ 5 ] cases fail
+
 ```
 
 Have fun

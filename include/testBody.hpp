@@ -10,7 +10,7 @@ class test_body_base : NonCopyable,
         _is_async = is_async;
         _func = func;
     }
-    bool _is_async;
+
     void set_is_async(bool is_async)
     {
         _is_async = is_async;
@@ -42,5 +42,6 @@ class test_body_base : NonCopyable,
 
         return result_future;
     }
+    bool _is_async;
     std::function<case_result(void *arg, unsigned long id)> _func;
 };

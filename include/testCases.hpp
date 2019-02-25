@@ -127,6 +127,4 @@ class test_case_base : NonCopyable,
 	std::string _case_name;
 	std::string _suit_name;
 	std::string _project_name;
-	std::string _case_info;
-	bool _is_async;
 };
