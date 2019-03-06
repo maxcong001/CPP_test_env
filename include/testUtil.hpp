@@ -205,9 +205,8 @@ class result_container
 				for (auto one_case : suit.second)
 				{
 					string result;
-
-					std::chrono::seconds span(10);
 					/*
+					std::chrono::seconds span(10);
 					if (one_case.second.wait_for(span) == std::future_status::timeout)
 					{
 						cout << "timeout waiting for the result of case : " << cyan << one_case.first << normal << endl;

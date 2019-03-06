@@ -116,28 +116,28 @@ shared_ptr<test_body_base> body_0009(new test_body_base([](void *arg, unsigned l
 
 shared_ptr<test_case_base> case_0001(
 	new test_case_base(prepare_env_example, body_0001, destroy_env_example,
-					   "case_0001"));
+					   "case_0001", "case_0001 info"));
 shared_ptr<test_case_base> case_0002(
 	new test_case_base(prepare_env_example, body_0002, destroy_env_example,
-					   "case_0002"));
+					   "case_0002", "case_0002 info"));
 shared_ptr<test_case_base> case_0003(
 	new test_case_base(prepare_env_example_001, body_0003, destroy_env_example,
-					   "case_0003"));
+					   "case_0003", "case_0003 info"));
 shared_ptr<test_case_base> case_0004(
 	new test_case_base(prepare_env_example_001, body_0004, destroy_env_example,
-					   "case_0004"));
+					   "case_0004", "case_0004 info"));
 shared_ptr<test_case_base> case_0005(
 	new test_case_base(prepare_env_example_001, body_0005, destroy_env_example,
-					   "case_0005"));
+					   "case_0005", "case_0005 info"));
 shared_ptr<test_case_base> case_0006(
 	new test_case_base(prepare_env_example_001, body_0006, destroy_env_example,
-					   "case_0006"));
+					   "case_0006", "case_0006 info"));
 shared_ptr<test_case_base> case_0007(
 	new test_case_base(prepare_env_example_001, body_0007, destroy_env_example,
-					   "case_0007"));
+					   "case_0007", "case_0007 info"));
 shared_ptr<test_case_base> case_0008(
 	new test_case_base(prepare_env_example_001, body_0002, destroy_env_example,
-					   "case_0008"));
+					   "case_0008", "case_0008 info"));
 shared_ptr<test_case_base> case_0009(
 	new test_case_base(prepare_env_example_001, body_0004, destroy_env_example,
-					   "case_0009"));
+					   "case_0009", "case_0009 info"));

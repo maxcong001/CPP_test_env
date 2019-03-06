@@ -33,12 +33,13 @@ class test_case_base : NonCopyable,
 {
   public:
 	test_case_base(TEST_PREPARE_FUNCTION prepare_env_arg, std::shared_ptr<test_body_base> body,
-				   TEST_DESTROY_FUNCTION destroy_env, string case_name)
+				   TEST_DESTROY_FUNCTION destroy_env, string case_name, string info)
 	{
 		_prepare_env = prepare_env_arg;
 		_body = body;
 		_destroy_env = destroy_env;
 		_case_name = case_name;
+		_info = info;
 	}
 	~test_case_base()
 	{
@@ -79,6 +80,7 @@ class test_case_base : NonCopyable,
 	}
 	virtual bool run()
 	{
+		std::cout << "now running case : " << _case_name << ", case info is : " << _info << std::endl;
 		prepare_env();
 		if (_body)
 		{
@@ -127,4 +129,5 @@ class test_case_base : NonCopyable,
 	std::string _case_name;
 	std::string _suit_name;
 	std::string _project_name;
+	std::string _info;
 };
