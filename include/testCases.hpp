@@ -28,27 +28,22 @@
 #include "testUtil.hpp"
 #include "testBody.hpp"
 //#include "testCasesBody.hpp"
-class test_case_base : NonCopyable,
-					   public std::enable_shared_from_this<test_case_base>
+template <typename env_arg>
+class test_case_base
 {
   public:
-	test_case_base(TEST_PREPARE_FUNCTION prepare_env_arg, std::shared_ptr<test_body_base> body,
-				   TEST_DESTROY_FUNCTION destroy_env, string case_name, string info)
+	test_case_base(std::shared_ptr<test_body_base> body, string case_name, string info)
 	{
-		_prepare_env = prepare_env_arg;
 		_body = body;
-		_destroy_env = destroy_env;
 		_case_name = case_name;
 		_info = info;
 	}
 	~test_case_base()
 	{
 	}
-	TEST_PREPARE_FUNCTION get_prepare_func() { return _prepare_env; }
-	TEST_DESTROY_FUNCTION get_destroy_func() { return _destroy_env; }
 
-	virtual void *get_arg() { return _arg; }
-	virtual void set_arg(void *inArg) { _arg = inArg; }
+	virtual bool prepare_env() = 0;
+	virtual bool destroy_env() = 0;
 
 	void set_case_name(std::string name)
 	{
@@ -84,17 +79,7 @@ class test_case_base : NonCopyable,
 		prepare_env();
 		if (_body)
 		{
-			auto result_fut = _body->run(_arg, get_signature());
-			/*
-			std::chrono::seconds span(10);
-			if (result_fut.wait_for(span) == std::future_status::timeout)
-			{
-				std::cout << "timeout(10S) waiting for case " << get_signature() << std::endl;
-				result_container::record_result_with_sig(CASE_TIMEOUT, get_signature());
-				return false;
-			}
-			*/
-			result_fut.wait();
+			result_container::record_result_with_sig(_body->run(_arg, get_signature()), get_signature());
 		}
 		else
 		{
@@ -105,27 +90,11 @@ class test_case_base : NonCopyable,
 		destroy_env();
 		return true;
 	}
-	virtual void prepare_env()
-	{
-		if (_prepare_env)
-		{
-			_arg = _prepare_env();
-		}
-	}
-	virtual void destroy_env()
-	{
-		if (_destroy_env)
-		{
-			_destroy_env(_arg);
-		}
-	}
 
-	std::shared_ptr<test_case_base> getSelf() { return shared_from_this(); }
 
-	TEST_PREPARE_FUNCTION _prepare_env;
-	TEST_DESTROY_FUNCTION _destroy_env;
-	std::shared_ptr<test_body_base> _body;
-	void *_arg;
+
+	std::unique_ptr<test_body_base> _body;
+	std::unique_ptr<env_arg> _arg;
 	std::string _case_name;
 	std::string _suit_name;
 	std::string _project_name;
