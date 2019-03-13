@@ -25,7 +25,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "testUtil.hpp"
-#include "threadPool.hpp"
 #include <utility>
 class test_project_base
 {
@@ -34,27 +33,19 @@ class test_project_base
 	test_project_base(std::string name)
 	{
 		_project_name = name;
-		int thread_num = std::thread::hardware_concurrency();
-		_thread_pool_sptr.reset(new ThreadPool(thread_num));
 	}
+
+	virtual void init() = 0;
 
 	void add_suit(std::shared_ptr<test_suit_base> test_suit)
 	{
-		_suit[test_suit->get_suit_name()] = test_suit;
 		test_suit->set_project_name(get_project_name());
+		test_suit->init();
 	}
 	void run()
 	{
-		for (auto i : _suit)
-		{
-			std::function<void(void)> task = std::bind(&test_suit_base::run, i.second);
-			_results.emplace_back(_thread_pool_sptr->enqueue(task));
-		}
-		// wait until all the cases done
-		for (auto &&result : _results)
-		{
-			result.get();
-		}
+		case_pool::instance()->run();
+		result_container::instance()->dump_result();
 	}
 	void set_project_name(std::string name)
 	{
@@ -65,7 +56,5 @@ class test_project_base
 		return _project_name;
 	}
 	std::string _project_name;
-	std::unordered_map<std::string, std::shared_ptr<test_suit_base>> _suit;
-	std::shared_ptr<ThreadPool> _thread_pool_sptr;
-	std::vector<std::future<void>> _results;
+
 };

@@ -27,23 +27,19 @@
 
 #include "testUtil.hpp"
 #include "testBody.hpp"
-//#include "testCasesBody.hpp"
-template <typename env_arg>
+#include "threadPool.hpp"
 class test_case_base
 {
+
   public:
-	test_case_base(std::shared_ptr<test_body_base> body, string case_name, string info)
+	test_case_base(string case_name, string info)
 	{
-		_body = body;
 		_case_name = case_name;
 		_info = info;
 	}
-	~test_case_base()
+	virtual ~test_case_base()
 	{
 	}
-
-	virtual bool prepare_env() = 0;
-	virtual bool destroy_env() = 0;
 
 	void set_case_name(std::string name)
 	{
@@ -73,30 +69,78 @@ class test_case_base
 	{
 		return _project_name + ":" + _suit_name + ":" + _case_name;
 	}
-	virtual bool run()
-	{
-		std::cout << "now running case : " << _case_name << ", case info is : " << _info << std::endl;
-		prepare_env();
-		if (_body)
-		{
-			result_container::record_result_with_sig(_body->run(_arg, get_signature()), get_signature());
-		}
-		else
-		{
-			std::cout << "no test body in the case : " << get_signature() << std::endl;
-			result_container::record_result_with_sig(CASE_FAIL, get_signature());
-			return false;
-		}
-		destroy_env();
-		return true;
-	}
-
-
-
-	std::unique_ptr<test_body_base> _body;
-	std::unique_ptr<env_arg> _arg;
+	virtual void run() = 0;
 	std::string _case_name;
 	std::string _suit_name;
 	std::string _project_name;
 	std::string _info;
+};
+template <typename env_arg>
+class test_case : public test_case_base
+{
+  public:
+	using test_case_base::test_case_base;
+	virtual bool prepare_env() = 0;
+	virtual bool destroy_env() = 0;
+
+	virtual void run()
+	{
+		result_container::instance()->record_result_with_sig(CASE_FAIL, get_signature());
+		std::cout << "now running case : " << _case_name << ", case info is : " << _info << std::endl;
+		if (!prepare_env())
+		{
+			return;
+		}
+		unsigned long case_id = sigIDMapping::instance()->add(get_signature());
+		if (_body)
+		{
+			result_container::instance()->record_result_with_sig(_body->run(std::move(_arg), case_id), get_signature());
+		}
+		else
+		{
+			std::cout << "no test body in the case : " << get_signature() << std::endl;
+			result_container::instance()->record_result_with_sig(CASE_FAIL, get_signature());
+		}
+		destroy_env();
+	}
+	std::shared_ptr<test_body_base<env_arg>> _body;
+	std::shared_ptr<env_arg> _arg;
+};
+
+class case_pool
+{
+  public:
+	case_pool()
+	{
+		int thread_num = std::thread::hardware_concurrency();
+		_thread_pool_sptr.reset(new ThreadPool(thread_num));
+	}
+	static inline case_pool *instance()
+	{
+		static auto ins = new case_pool();
+		return ins;
+	}
+
+	void add_case(std::shared_ptr<test_case_base> _case)
+	{
+		_case_pool[_case->get_case_name()] = _case;
+	}
+
+	void run()
+	{
+		std::cout<<"Maxx ----------there are : "<<_case_pool.size()<<" test cases"<<std::endl;
+		std::vector<std::future<void>> _results;
+		for (auto i : _case_pool)
+		{
+			std::function<void(void)> task = std::bind(&test_case_base::run, i.second);
+			_results.push_back(_thread_pool_sptr->enqueue(task));
+		}
+		// wait until all the cases done
+		for (auto &&result : _results)
+		{
+			result.wait();
+		}
+	}
+	std::shared_ptr<ThreadPool> _thread_pool_sptr;
+	std::map<std::string, std::shared_ptr<test_case_base>> _case_pool;
 };
