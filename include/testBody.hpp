@@ -1,47 +1,37 @@
 #pragma once
 #include "testUtil.hpp"
-class test_body_base : NonCopyable,
-                       public std::enable_shared_from_this<test_body_base>
+template <typename env_type = void *>
+class test_body_base
 {
   public:
-    test_body_base() = delete;
-    test_body_base(std::function<case_result(void *arg, unsigned long id)> func, bool is_async)
+    test_body_base() = default;
+    void set_async()
     {
-        _is_async = is_async;
-        _func = func;
+        _is_async = true;
     }
-
-    void set_is_async(bool is_async)
+    void set_sync()
     {
-        _is_async = is_async;
+        _is_async = false;
     }
     bool get_is_async()
     {
         return _is_async;
     }
-
-    std::shared_future<case_result> run(void *arg, std::string sig)
+    virtual case_result body(unsigned long id, std::shared_ptr<env_type> env) = 0;
+    virtual case_result run(std::shared_ptr<env_type> env, unsigned long id)
     {
-        unsigned long case_id = sigIDMapping::add(sig);
-        std::promise<case_result> result_promise;
-        std::shared_future<case_result> result_future(result_promise.get_future());
-        result_container::set_case_future(sig, result_future);
-        result_container::set_case_promise(sig, std::move(result_promise));
         if (get_is_async())
         {
-            case_result result = _func(arg, case_id);
-            if (result != CASE_SUCCESS)
-            {
-                result_container::record_result_with_sig(result, sig);
-            }
+            std::promise<case_result> result_promise;
+            std::shared_future<case_result> result_future(result_promise.get_future());
+            result_container::instance()->set_case_promise_with_id(id, std::move(result_promise));
+            body(id, std::move(env));
+            return (result_future.valid()) ? result_future.get() : CASE_FAIL;
         }
         else
         {
-            result_container::record_result_with_sig(_func(arg, case_id), sig);
+            return body(id, std::move(env));
         }
-
-        return result_future;
     }
     bool _is_async;
-    std::function<case_result(void *arg, unsigned long id)> _func;
 };

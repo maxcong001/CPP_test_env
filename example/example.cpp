@@ -25,38 +25,97 @@
  */
 
 #include "testInclude.hpp"
-#include "suit_pool.hpp"
-#include "case_pool.hpp"
-#include "env_pool.hpp"
-#include "body_pool.hpp"
 #include <memory>
+
+class test_body_example_async : public test_body_base<sigIDMapping>
+{
+  public:
+	using test_body_base::test_body_base;
+	test_body_example_async()
+	{
+		set_async();
+	}
+	case_result body(unsigned long id, std::shared_ptr<sigIDMapping> arg) override
+	{
+		std::cout << "[case body] in the async case body" << std::endl;
+		std::thread result_thread([id]() {
+			std::cout << "[case result] start a new thread and wait" << std::endl;
+			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+			std::cout << "[case result] after sleep, record result" << std::endl;
+			REC_CASE_FAIL(id);
+		});
+		result_thread.detach();
+		return CASE_SUCCESS;
+	}
+};
+class test_body_example : public test_body_base<sigIDMapping>
+{
+  public:
+	using test_body_base::test_body_base;
+	case_result body(unsigned long id, std::shared_ptr<sigIDMapping> arg) override
+	{
+		set_sync();
+		return CASE_SUCCESS;
+	}
+};
+class test_case_example_async : public test_case<sigIDMapping>
+{
+  public:
+	using test_case::test_case;
+	bool prepare_env() override
+	{
+		_body = std::make_shared<test_body_example_async>();
+		return true;
+	}
+	bool destroy_env() override
+	{
+		return true;
+	}
+};
+
+class test_case_example : public test_case<sigIDMapping>
+{
+  public:
+	using test_case::test_case;
+	bool prepare_env() override
+	{
+		_body = std::make_shared<test_body_example>();
+		return true;
+	}
+	bool destroy_env() override
+	{
+		return true;
+	}
+};
+
+class test_suit_example : public test_suit_base
+{
+  public:
+	using test_suit_base::test_suit_base;
+	void init() override
+	{
+		addCase(std::make_shared<test_case_example>("case name", "case info"));
+		addCase(std::make_shared<test_case_example_async>("case name1", "case info"));
+		addCase(std::make_shared<test_case_example>("case name2", "case info"));
+		addCase(std::make_shared<test_case_example_async>("case name3", "case info"));
+		addCase(std::make_shared<test_case_example>("case name4", "case info"));
+		addCase(std::make_shared<test_case_example_async>("case name5", "case info"));
+	}
+};
+
+class test_project_example : public test_project_base
+{
+  public:
+	using test_project_base::test_project_base;
+	void init() override
+	{
+		add_suit(std::make_shared<test_suit_example>("suit name"));
+	}
+};
 
 int main()
 {
-	std::shared_ptr<test_project_base> project_sptr = std::make_shared<test_project_base>("test_project");
-	// prepare suit here
-	suit_0001->addCase(case_0001);
-	suit_0001->addCase(case_0002);
-	suit_0001->addCase(case_0003);
-	suit_0001->addCase(case_0004);
-	suit_0001->addCase(case_0005);
-
-	suit_0002->addCase(case_0006);
-	suit_0002->addCase(case_0007);
-
-	suit_0003->addCase(case_0008);
-	suit_0003->addCase(case_0009);
-
-	// add your suit here
-	project_sptr->add_suit(suit_0001);
-	project_sptr->add_suit(suit_0002);
-	project_sptr->add_suit(suit_0003);
-	// run!
-	//case_0001->run();
-	//suit_0001->run();
-	project_sptr->run();
-
-	//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-	// dump result
-	result_container::dump_result();
+	auto _project = std::make_shared<test_project_example>("test");
+	_project->init();
+	_project->run();
 }

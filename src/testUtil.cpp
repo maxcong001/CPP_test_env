@@ -1,13 +1,7 @@
 #include "testUtil.hpp"
 #include <sstream>
 #include <set>
-unsigned long sigIDMapping::current_id = 1;
-std::map<unsigned long, std::string> sigIDMapping::sig_id_map;
-std::mutex sigIDMapping::result_mutex;
 
-std::map<std::string, std::map<std::string, std::map<std::string, std::shared_future<case_result>>>> result_container::_case_reslut_container;
-std::map<std::string, std::map<std::string, std::map<std::string, std::promise<case_result>>>> result_container::_case_promise_container;
-std::mutex result_container::result_mutex;
 std::vector<std::string> sig_split(const std::string &s, char delim)
 {
     std::vector<std::string> elems;

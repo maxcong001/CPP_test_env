@@ -25,44 +25,24 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "testUtil.hpp"
-class test_suit_base : NonCopyable,
-					   public std::enable_shared_from_this<test_suit_base>
+class test_suit_base
 {
   public:
 	test_suit_base() = delete;
 	test_suit_base(string name) { _suit_name = name; }
 	void addCase(std::shared_ptr<test_case_base> test_case)
 	{
-		_cases[test_case->get_case_name()] = test_case;
+		std::cout<<"[test suit]: add test case"<<test_case->get_case_name()<<std::endl;
 		test_case->set_suit_name(get_suit_name());
-		std::cout << "-----------------now add case to suit : " << get_suit_name() << ", case name is :" << test_case->get_case_name() << std::endl;
-		//test_case->set_project_name(get_project_name());
+		test_case->set_project_name(get_project_name());
+		case_pool::instance()->add_case(test_case);
 	}
-	std::shared_ptr<test_suit_base> getSelf() { return shared_from_this(); }
-	void run()
-	{
-		for (auto i : _cases)
-		{
-			std::function<bool(void)> task = std::bind(&test_case_base::run, i.second);
-			_results.emplace_back(ThreadPool::get_instance()->enqueue(task));
-		}
-
-		// wait until all the cases done
-		for (auto &&result : _results)
-		{
-			result.get();
-		}
-	}
+	virtual void init() = 0;
 	string get_suit_name() { return _suit_name; }
 	void set_suit_name(std::string name)
 	{
 		_suit_name = name;
-		for (auto i : _cases)
-		{
-			(i.second)->set_suit_name(get_suit_name());
-		}
 	}
-
 	std::string get_project_name()
 	{
 		return _project_name;
@@ -70,15 +50,7 @@ class test_suit_base : NonCopyable,
 	void set_project_name(std::string name)
 	{
 		_project_name = name;
-		for (auto i : _cases)
-		{
-			(i.second)->set_project_name(get_project_name());
-		}
 	}
 	std::string _suit_name;
 	std::string _project_name;
-
-	std::unordered_map<std::string, std::shared_ptr<test_case_base>> _cases;
-
-	std::vector<std::future<bool>> _results;
 };
