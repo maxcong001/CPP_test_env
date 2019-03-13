@@ -40,7 +40,6 @@
 #include <tuple>
 #include <unordered_map>
 #include <vector>
-
 #include "threadPool.hpp"
 using namespace std;
 /*
@@ -193,11 +192,9 @@ class result_container
 		cout << magenta << "total run [ " << (pass + fail) << " ] cases, " << normal << green << "[ " << pass << " ] cases pass" << normal
 			 << ", " << red << "[ " << fail << " ] cases fail " << normal << endl;
 	}
-
 	std::map<std::string, std::map<std::string, std::map<std::string, case_result>>> _case_reslut_container;
 	std::map<std::string, std::promise<case_result>> _case_promise_container;
 	std::mutex result_mutex;
 };
-
 std::function<bool(unsigned long)> REC_CASE_FAIL = std::bind(&result_container::record_result_with_id, result_container::instance(), CASE_FAIL, std::placeholders::_1);
 std::function<bool(unsigned long)> REC_CASE_SUCCESS = std::bind(&result_container::record_result_with_id, result_container::instance(), CASE_SUCCESS, std::placeholders::_1);

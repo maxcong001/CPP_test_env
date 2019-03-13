@@ -38,13 +38,11 @@ class test_suit_base
 		case_pool::instance()->add_case(test_case);
 	}
 	virtual void init() = 0;
-
 	string get_suit_name() { return _suit_name; }
 	void set_suit_name(std::string name)
 	{
 		_suit_name = name;
 	}
-
 	std::string get_project_name()
 	{
 		return _project_name;

@@ -24,7 +24,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 #include <vector>
 #include <queue>
 #include <memory>
@@ -34,7 +33,6 @@
 #include <future>
 #include <functional>
 #include <stdexcept>
-
 class ThreadPool
 {
   public:
@@ -42,13 +40,11 @@ class ThreadPool
     template <class F, class... Args>
     auto enqueue(F &&f, Args &&... args) -> std::future<typename std::result_of<F(Args...)>::type>;
     ~ThreadPool();
-
     static std::shared_ptr<ThreadPool> get_instance()
     {
         static std::shared_ptr<ThreadPool> ins_sptr = std::make_shared<ThreadPool>((std::thread::hardware_concurrency() > 0) ? (std::thread::hardware_concurrency()) : 1);
         return ins_sptr;
     }
-
   private:
     // need to keep track of threads so we can join them
     std::vector<std::thread> workers;
@@ -59,7 +55,6 @@ class ThreadPool
     std::condition_variable condition;
     bool stop;
 };
-
 // add new work item to the pool
 template <class F, class... Args>
 auto ThreadPool::enqueue(F &&f, Args &&... args)
@@ -102,7 +97,6 @@ inline ThreadPool::ThreadPool(size_t threads)
                 }
             });
 }
-
 // the destructor joins all threads
 inline ThreadPool::~ThreadPool()
 {

@@ -30,7 +30,6 @@
 #include "threadPool.hpp"
 class test_case_base
 {
-
   public:
 	test_case_base(string case_name, string info)
 	{
@@ -40,7 +39,6 @@ class test_case_base
 	virtual ~test_case_base()
 	{
 	}
-
 	void set_case_name(std::string name)
 	{
 		_case_name = name;
@@ -82,7 +80,6 @@ class test_case : public test_case_base
 	using test_case_base::test_case_base;
 	virtual bool prepare_env() = 0;
 	virtual bool destroy_env() = 0;
-
 	virtual void run()
 	{
 		result_container::instance()->record_result_with_sig(CASE_FAIL, get_signature());
@@ -106,7 +103,6 @@ class test_case : public test_case_base
 	std::shared_ptr<test_body_base<env_arg>> _body;
 	std::shared_ptr<env_arg> _arg;
 };
-
 class case_pool
 {
   public:
@@ -120,15 +116,12 @@ class case_pool
 		static auto ins = new case_pool();
 		return ins;
 	}
-
 	void add_case(std::shared_ptr<test_case_base> _case)
 	{
 		_case_pool[_case->get_case_name()] = _case;
 	}
-
 	void run()
 	{
-		std::cout<<"Maxx ----------there are : "<<_case_pool.size()<<" test cases"<<std::endl;
 		std::vector<std::future<void>> _results;
 		for (auto i : _case_pool)
 		{
