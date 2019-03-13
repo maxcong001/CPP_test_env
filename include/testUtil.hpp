@@ -41,6 +41,8 @@
 #include <unordered_map>
 #include <vector>
 #include "threadPool.hpp"
+#include <sstream>
+
 using namespace std;
 /*
 3/4 bit
@@ -69,7 +71,36 @@ enum case_result : unsigned char
 
 };
 
-std::tuple<std::string, std::string, std::string> get_project_suit_case_name(std::string sig);
+class test_util
+{
+  public:
+	static std::tuple<std::string, std::string, std::string> get_project_suit_case_name(std::string sig)
+	{
+		std::vector<std::string> sig_result = sig_split(sig, ':');
+		std::string project_name = sig_result[0];
+		std::string suit_name = sig_result[1];
+		std::string case_name = sig_result[2];
+		//std::cout << "project is : " << project_name << ", suit is : " << suit_name << ", case is : " << case_name << std::endl;
+		return std::make_tuple(project_name, suit_name, case_name);
+	}
+	static std::vector<std::string> sig_split(const std::string &s, char delim)
+	{
+		std::vector<std::string> elems;
+
+		std::stringstream ss(s);
+		std::string item;
+
+		while (std::getline(ss, item, delim))
+		{
+			if (!item.empty())
+			{
+				elems.push_back(item);
+			}
+		}
+		return elems;
+	}
+};
+
 //  NOTE: before using this template, you should write operator ==.
 //  this is for sync compare result
 //  to do: maybe use case class instance as arg, then print the case name and
@@ -141,7 +172,7 @@ class result_container
 		std::string project_name;
 		std::string suit_name;
 		std::string case_name;
-		std::tie(project_name, suit_name, case_name) = get_project_suit_case_name(sig);
+		std::tie(project_name, suit_name, case_name) = test_util::get_project_suit_case_name(sig);
 
 		if (_case_promise_container.find(sig) != _case_promise_container.end())
 		{

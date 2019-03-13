@@ -54,7 +54,6 @@ class test_body_example : public test_body_base<sigIDMapping>
 	using test_body_base::test_body_base;
 	case_result body(unsigned long id, std::shared_ptr<sigIDMapping> arg) override
 	{
-		set_sync();
 		return CASE_SUCCESS;
 	}
 };
