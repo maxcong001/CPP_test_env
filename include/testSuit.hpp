@@ -32,7 +32,7 @@ class test_suit_base
 	test_suit_base(string name) { _suit_name = name; }
 	void addCase(std::shared_ptr<test_case_base> test_case)
 	{
-		std::cout<<"[test suit]: add test case"<<test_case->get_case_name()<<std::endl;
+		std::cout << "[test suit]: add test case" << test_case->get_case_name() << std::endl;
 		test_case->set_suit_name(get_suit_name());
 		test_case->set_project_name(get_project_name());
 		case_pool::instance()->add_case(test_case);

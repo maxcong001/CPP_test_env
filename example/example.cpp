@@ -54,7 +54,6 @@ class test_body_example : public test_body_base<sigIDMapping>
 	using test_body_base::test_body_base;
 	case_result body(unsigned long id, std::shared_ptr<sigIDMapping> arg) override
 	{
-		set_sync();
 		return CASE_SUCCESS;
 	}
 };
@@ -62,12 +61,27 @@ class test_case_example_async : public test_case<sigIDMapping>
 {
   public:
 	using test_case::test_case;
-	bool prepare_env() override
+	virtual bool prepare_env() override
 	{
 		_body = std::make_shared<test_body_example_async>();
 		return true;
 	}
-	bool destroy_env() override
+	virtual bool destroy_env() override
+	{
+		return true;
+	}
+};
+class test_case_example_async_son : public test_case_example_async
+{
+  public:
+	using test_case_example_async::test_case_example_async;
+	virtual bool prepare_env() override
+	{
+		std::cout<<"test_case_example_async_son"<<std::endl;
+		_body = std::make_shared<test_body_example_async>();
+		return true;
+	}
+	virtual bool destroy_env() override
 	{
 		return true;
 	}
@@ -99,7 +113,7 @@ class test_suit_example : public test_suit_base
 		addCase(std::make_shared<test_case_example>("case name2", "case info"));
 		addCase(std::make_shared<test_case_example_async>("case name3", "case info"));
 		addCase(std::make_shared<test_case_example>("case name4", "case info"));
-		addCase(std::make_shared<test_case_example_async>("case name5", "case info"));
+		addCase(std::make_shared<test_case_example_async_son>("case name5", "case info"));
 	}
 };
 

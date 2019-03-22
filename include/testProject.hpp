@@ -56,5 +56,4 @@ class test_project_base
 		return _project_name;
 	}
 	std::string _project_name;
-
 };

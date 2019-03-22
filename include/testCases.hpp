@@ -91,7 +91,19 @@ class test_case : public test_case_base
 		unsigned long case_id = sigIDMapping::instance()->add(get_signature());
 		if (_body)
 		{
-			result_container::instance()->record_result_with_sig(_body->run(std::move(_arg), case_id), get_signature());
+			if (_body->get_is_async())
+			{
+			
+				if (_body->run(_arg, case_id) != CASE_SUCCESS)
+				{
+					
+					result_container::instance()->record_result_with_sig(CASE_FAIL, get_signature());
+				}
+			}
+			else
+			{
+				result_container::instance()->record_result_with_sig(_body->run(_arg, case_id), get_signature());
+			}
 		}
 		else
 		{
@@ -99,6 +111,10 @@ class test_case : public test_case_base
 			result_container::instance()->record_result_with_sig(CASE_FAIL, get_signature());
 		}
 		destroy_env();
+	}
+	void set_body(std::shared_ptr<test_body_base<env_arg>> body)
+	{
+		_body = body;
 	}
 	std::shared_ptr<test_body_base<env_arg>> _body;
 	std::shared_ptr<env_arg> _arg;
@@ -131,7 +147,10 @@ class case_pool
 		// wait until all the cases done
 		for (auto &&result : _results)
 		{
-			result.wait();
+			if (result.valid())
+			{
+				result.wait();
+			}
 		}
 	}
 	std::shared_ptr<ThreadPool> _thread_pool_sptr;
