@@ -166,7 +166,7 @@ class result_container
 		return true;
 	}
 
-	bool record_result_with_sig(case_result result, std::string sig)
+	bool record_result_with_sig(case_result result, std::string sig, bool async = false)
 	{
 		std::unique_lock<std::mutex> lock(result_mutex);
 		std::string project_name;
@@ -174,22 +174,28 @@ class result_container
 		std::string case_name;
 		std::tie(project_name, suit_name, case_name) = test_util::get_project_suit_case_name(sig);
 
-		if (_case_promise_container.find(sig) != _case_promise_container.end())
+		if (_case_promise_container.find(sig) != _case_promise_container.end() && async)
 		{
-			_case_promise_container[sig].set_value(result);
+			try
+			{
+				_case_promise_container[sig].set_value(result);
+			}
+			catch (std::future_error &e)
+			{
+				std::cout << "the promise is already set!!!!" << std::endl;
+				return false;
+			}
 		}
-		else
-		{
-			_case_reslut_container[project_name][suit_name][case_name] = result;
-		}
+
+		_case_reslut_container[project_name][suit_name][case_name] = result;
 
 		return true;
 	}
-	bool record_result_with_id(case_result result, unsigned long id)
+	bool record_result_with_id(case_result result, unsigned long id, bool async = false)
 	{
 		std::string sig;
 		sig = sigIDMapping::instance()->get_sig(id);
-		return record_result_with_sig(result, sig);
+		return record_result_with_sig(result, sig, async);
 	}
 	void dump_result()
 	{
@@ -227,5 +233,5 @@ class result_container
 	std::map<std::string, std::promise<case_result>> _case_promise_container;
 	std::mutex result_mutex;
 };
-std::function<bool(unsigned long)> REC_CASE_FAIL = std::bind(&result_container::record_result_with_id, result_container::instance(), CASE_FAIL, std::placeholders::_1);
-std::function<bool(unsigned long)> REC_CASE_SUCCESS = std::bind(&result_container::record_result_with_id, result_container::instance(), CASE_SUCCESS, std::placeholders::_1);
+std::function<bool(unsigned long)> REC_CASE_FAIL = std::bind(&result_container::record_result_with_id, result_container::instance(), CASE_FAIL, std::placeholders::_1, true);
+std::function<bool(unsigned long)> REC_CASE_SUCCESS = std::bind(&result_container::record_result_with_id, result_container::instance(), CASE_SUCCESS, std::placeholders::_1, true);
