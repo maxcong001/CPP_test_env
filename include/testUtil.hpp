@@ -235,3 +235,4 @@ class result_container
 };
 std::function<bool(unsigned long)> REC_CASE_FAIL = std::bind(&result_container::record_result_with_id, result_container::instance(), CASE_FAIL, std::placeholders::_1, true);
 std::function<bool(unsigned long)> REC_CASE_SUCCESS = std::bind(&result_container::record_result_with_id, result_container::instance(), CASE_SUCCESS, std::placeholders::_1, true);
+

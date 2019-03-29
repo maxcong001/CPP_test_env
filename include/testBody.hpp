@@ -35,3 +35,4 @@ class test_body_base
     }
     bool _is_async;
 };
+

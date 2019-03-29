@@ -108,3 +108,4 @@ inline ThreadPool::~ThreadPool()
     for (std::thread &worker : workers)
         worker.join();
 }
+
