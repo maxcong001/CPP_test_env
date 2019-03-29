@@ -1,3 +1,5 @@
+
+[![Build Status](https://travis-ci.org/maxcong001/CPP_test_env.svg?branch=master)](https://travis-ci.org/maxcong001/CPP_test_env) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=maxcong001_CPP_test_env&metric=alert_status)](https://sonarcloud.io/dashboard?id=maxcong001_CPP_test_env)
 ## This is a test framework for CPP development.
 detail see the example.
 ## dependancy   
