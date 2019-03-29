@@ -34,7 +34,7 @@
 #include <functional>
 #include <stdexcept>
 #include "nonCopyable.hpp"
-class ThreadPool: NonCopyable
+class ThreadPool: public NonCopyable
 {
   public:
     ThreadPool() = default;
