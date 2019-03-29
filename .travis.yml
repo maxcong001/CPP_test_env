@@ -24,9 +24,12 @@ addons:
       - gcc-4.8
       - g++-4.8
   sonarcloud:
-    organization: "maxcong001_CPP_test_env" # the key of the org you chose at step #3
+    organization: "maxcong001" # the key of the org you chose at step #3
+    projectKey: "maxcong001_CPP_test_env"
+    project: "maxcong001_CPP_test_env"
+
     token:
-      secure: "mucG96eqclBFH6T/fYRv7gDELBDTlBX9AEEjVXwZYlHma9bR1AS9v952xHq79yBmCrXKxUeUOJQt5WFUaDfNfevqidNuWTMIQP3SFOxnNg/UxARFslR5qef/QkxaYBlyXn8gfoRyJDEuAXUjdqsH2sOdWY+0uFAPJuU7muVEDP8PSblUYZRH/+QWZF/I71hO09UyBbqFriYTuFumiFMYkD2dYUWkiqaoKtLSZNrn5LSpqH1GoSjJFxLhbUy7pOULsj4qFZLMso0U5YzlztjpeZpjiSYeWoZ99SC51Y29lO1Z8xEZpEgGAdDfyoKSqUpLmVgNiGkm40dWW+9arlNGoYJr5jNqEyWOQ52YdKJvyGxT7JPn+TDStMoROwy/sX/Wsw8xDcKubefnGkefL8q5VyQ2ck85vIwvDcFvl88fjhhdtAhtuyMFMoq9qBAw1M4t7vOhGoGR6mF+YK2g3pWQAvA+2/mHftYt68S+RNDqxli5441hDsHZsmevOQpqcDF+nmYcrBvXZfm4Y4flfatyiDntNqoUd0ufxPbTh9XqBxz6wBsf+RT/xMYtAwNFrsluWPUxpMoRrXuYx1WRwMllTDrnQqG8Rrb6u4webJFQpAZ7q3hRZjXMZNMZIVBx0bEdiD7IOSlFAwSXt+sdJ41jbEctaKGIA0m29irSecnUbSI="
+      secure: "Tpy/Neqi6SO7SQGdnZB6Hvhp6wniin3kGkO4zSc44p249haFNvBj9O40vyp4pNKVT9Y8Rk6ZdRARiKTkvSoaSncZpgnxSRNRCp23Vem8M09FdQUCQL66a58ZkQ28cr/IPXGOYLy8Sh322RTmASjq8WGSKmSecYqGvNtEmhg2MCC09hlwe6e9zs+Y1uVIogDmxOfQ985ZcUFOj1N3wGs7dXrDlLUCexvHCh2/9hIDkrjmVjWWZGxn9zEAtnUZFOpReR/QTFth7N3h4O32QA1R+7DmElyClgJNS/cl7/EiFuBkSRBlmMPWCRKyW6S5ewWw8LITOXxJ/Y/WzuerI2WtsC0lOzNfWnPvsuFQg5zM9QRmeJW3budPsfZoNaIU6xthEGpJfQ80wQlQS29bHMz2v4B3fwMWlIIQOxNb5n+q4ViM8wEQ5zl4ZNcJ2UHmRpSrDmuTbpkVgv/IaeBK9XSvmgXNZ60zVYkMqMQGd8FSbEnAvmT3IuZDkkWJ/Vy2g7ybBw8G/cAwrpcK5MEcOJx7JXjuZQzZ0QrO29kYOF2ZVMMt350OXeCTSn3DkstL6YKuvUrEPZaK7+zlwTHOrMXWwiREHr9LKmXimWm6omT7ZXfICGhPDNkdFoYd1HFcOIgC/zBPNVULKMLMLygy7GuV23T4eaJ9V0EzfdQWje+MmZ4="
 
 
 
