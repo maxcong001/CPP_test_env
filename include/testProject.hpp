@@ -57,3 +57,4 @@ class test_project_base
 	}
 	std::string _project_name;
 };
+
