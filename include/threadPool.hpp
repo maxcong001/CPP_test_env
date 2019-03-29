@@ -33,7 +33,8 @@
 #include <future>
 #include <functional>
 #include <stdexcept>
-class ThreadPool
+#include "nonCopyable.hpp"
+class ThreadPool: public  NonCopyable
 {
   public:
     ThreadPool() = default;
