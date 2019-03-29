@@ -25,7 +25,8 @@ addons:
       - g++-4.8
   sonarcloud:
     organization: "maxcong001_CPP_test_env" # the key of the org you chose at step #3
-  
+    token:
+      secure: "mucG96eqclBFH6T/fYRv7gDELBDTlBX9AEEjVXwZYlHma9bR1AS9v952xHq79yBmCrXKxUeUOJQt5WFUaDfNfevqidNuWTMIQP3SFOxnNg/UxARFslR5qef/QkxaYBlyXn8gfoRyJDEuAXUjdqsH2sOdWY+0uFAPJuU7muVEDP8PSblUYZRH/+QWZF/I71hO09UyBbqFriYTuFumiFMYkD2dYUWkiqaoKtLSZNrn5LSpqH1GoSjJFxLhbUy7pOULsj4qFZLMso0U5YzlztjpeZpjiSYeWoZ99SC51Y29lO1Z8xEZpEgGAdDfyoKSqUpLmVgNiGkm40dWW+9arlNGoYJr5jNqEyWOQ52YdKJvyGxT7JPn+TDStMoROwy/sX/Wsw8xDcKubefnGkefL8q5VyQ2ck85vIwvDcFvl88fjhhdtAhtuyMFMoq9qBAw1M4t7vOhGoGR6mF+YK2g3pWQAvA+2/mHftYt68S+RNDqxli5441hDsHZsmevOQpqcDF+nmYcrBvXZfm4Y4flfatyiDntNqoUd0ufxPbTh9XqBxz6wBsf+RT/xMYtAwNFrsluWPUxpMoRrXuYx1WRwMllTDrnQqG8Rrb6u4webJFQpAZ7q3hRZjXMZNMZIVBx0bEdiD7IOSlFAwSXt+sdJ41jbEctaKGIA0m29irSecnUbSI="
 
 
 
