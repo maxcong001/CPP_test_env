@@ -93,10 +93,10 @@ class test_case : public test_case_base
 		{
 			if (_body->get_is_async())
 			{
-			
+
 				if (_body->run(_arg, case_id) != CASE_SUCCESS)
 				{
-					
+
 					result_container::instance()->record_result_with_sig(CASE_FAIL, get_signature());
 				}
 			}
@@ -142,7 +142,14 @@ class case_pool
 		for (auto i : _case_pool)
 		{
 			std::function<void(void)> task = std::bind(&test_case_base::run, i.second);
-			_results.push_back(_thread_pool_sptr->enqueue(task));
+			try
+			{
+				_results.push_back(_thread_pool_sptr->enqueue(task));
+			}
+			catch (...)
+			{
+				std::cout << "in thread pool fail" << std::endl;
+			}
 		}
 		// wait until all the cases done
 		for (auto &&result : _results)

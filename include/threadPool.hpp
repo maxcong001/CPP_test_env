@@ -36,7 +36,8 @@
 class ThreadPool
 {
   public:
-    ThreadPool(size_t);
+    ThreadPool() = default;
+    explicit ThreadPool(size_t threads);
     template <class F, class... Args>
     auto enqueue(F &&f, Args &&... args) -> std::future<typename std::result_of<F(Args...)>::type>;
     ~ThreadPool();
@@ -45,6 +46,7 @@ class ThreadPool
         static std::shared_ptr<ThreadPool> ins_sptr = std::make_shared<ThreadPool>((std::thread::hardware_concurrency() > 0) ? (std::thread::hardware_concurrency()) : 1);
         return ins_sptr;
     }
+
   private:
     // need to keep track of threads so we can join them
     std::vector<std::thread> workers;
@@ -68,8 +70,10 @@ auto ThreadPool::enqueue(F &&f, Args &&... args)
         std::unique_lock<std::mutex> lock(queue_mutex);
         // don't allow enqueueing after stopping the pool
         if (stop)
+        {
             throw std::runtime_error("enqueue on stopped ThreadPool");
-        tasks.emplace([=]() { (*task)(); });
+        }
+        tasks.emplace([task]() { (*task)(); });
     }
     condition.notify_one();
     return res;
@@ -108,4 +112,3 @@ inline ThreadPool::~ThreadPool()
     for (std::thread &worker : workers)
         worker.join();
 }
-
