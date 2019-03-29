@@ -1,3 +1,4 @@
+dist: trusty
 language: cpp
 
 # safelist
@@ -10,17 +11,25 @@ compiler:
   - gcc
 
 cache: ccache
-
+sudo: required
 os:
   - linux
-
+jdk:
+- oraclejdk8
 addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
     packages:
-      - gcc-4.8
-      - g++-4.8
+     # - gcc-4.8
+     # - g++-4.8
+  sonarcloud:
+    organization: "maxcong001" # the key of the org you chose at step #3
+    projectKey: "maxcong001_CPP_test_env"
+    project: "maxcong001_CPP_test_env"
+
+    token:
+      secure: "Bzr62Z/g9mxO1IbB0qRDOY8eH0ikNTQO70WpuHLfa0OK9z7XhiPXEUJA4F6cPY73nwB51QLiSMsKpXE0dq6ROt+iGcyhB/kSCOh55YpWie6qmI3sFf12/0zW0ZzGeq5+amo3EPwtc4OOoIuExLhCQl1XQ9QtIXWjXCYirZyxhGExxv74Hic+93oKSxBzSB8L6MNTxb6N9OoE+EVPy786RTg7wggMhgeW9MM1hAUcnhmdYuNC84FmeXKeaFiD2yu6t2ZZmAPmey25NYInNMKS7DaFGjoBHmW0TbmRVnrl0uFH5b8TJbLRsYerMzD426JS4xh/YfH1wZi3yQarvi4VUR1BhxpSBd/GZqBXSNRNrwq6WSwLszoFoUL273vC8Q+Oe5y44zequqEQySU6CRUPjSK0VbtCKWBP4meLtY08iP0XKyGo0NgbRAMhBf1weF2EyN57jcJ6WR5zuhNbdQafSBPVtq5CJOJhep3xcOBEwtwDjWsvTY67rQDT1XNox3fBjCzlvhR8d92UYukkBpFL6ZVwoHDozFJvc3pgi53Qws+YYOEwaT0APP0JouDoPPHbG2z768BznbvazbMT322A54uUr+YcoWxP9L3Q9T9T3Y7GHFyeNXTUchait4bgYjJCQo2BBsOFd0oQPSeAWiDDyPCl8Jtw+PWqmaCNBMM3GNs="
 
 
 
@@ -29,5 +38,4 @@ before_install:
 
 install:
   - if [[ "$TRAVIS_OS_NAME" != "osx" && "$CXX" = "g++" ]]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
-
-script: mkdir build && cd build && cmake .. && make && ./bin/M_empty_example
+script: mkdir build && cd build && cmake ..  && sonar-scanner
