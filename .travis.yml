@@ -1,3 +1,4 @@
+dist: trusty
 language: cpp
 
 # safelist
@@ -10,10 +11,11 @@ compiler:
   - gcc
 
 cache: ccache
-
+sudo: required
 os:
   - linux
-
+jdk:
+- oraclejdk8
 addons:
   apt:
     sources:
@@ -21,7 +23,12 @@ addons:
     packages:
       - gcc-4.8
       - g++-4.8
-
+  sonarcloud:
+    organization: "maxcong001" # the key of the org you chose at step #3
+  
+script:
+  # other script steps might be done before running the actual analysis
+  - sonar-scanner
 
 
 before_install:
@@ -30,4 +37,4 @@ before_install:
 install:
   - if [[ "$TRAVIS_OS_NAME" != "osx" && "$CXX" = "g++" ]]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
 
-script: mkdir build && cd build && cmake .. && make && ./bin/M_empty_example
+#script: mkdir build && cd build && cmake .. && make && ./bin/M_empty_example
