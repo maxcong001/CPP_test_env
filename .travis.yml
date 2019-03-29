@@ -24,7 +24,7 @@ addons:
       - gcc-4.8
       - g++-4.8
   sonarcloud:
-    organization: "maxcong001" # the key of the org you chose at step #3
+    organization: "maxcong001_CPP_test_env" # the key of the org you chose at step #3
   
 
 
