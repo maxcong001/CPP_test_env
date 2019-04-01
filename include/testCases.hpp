@@ -31,10 +31,9 @@
 class test_case_base
 {
   public:
-	test_case_base(string case_name, string info)
+	test_case_base(string case_name, string info):_case_name(case_name),_info(info)
 	{
-		_case_name = case_name;
-		_info = info;
+	
 	}
 	virtual ~test_case_base()
 	{
@@ -77,7 +76,7 @@ template <typename env_arg>
 class test_case : public test_case_base
 {
   public:
-	using test_case_base::test_case_base;
+	//using test_case_base::test_case_base;
 	virtual bool prepare_env() = 0;
 	virtual bool destroy_env() = 0;
 	virtual void run()
