@@ -35,6 +35,7 @@ class test_body_example_async : public test_body_base<sigIDMapping>
 	{
 		set_async();
 	}
+	virtual ~test_body_example_async(){}
 	case_result body(unsigned long id, std::shared_ptr<sigIDMapping> arg) override
 	{
 		std::cout << "[case body] in the async case body" << std::endl;
@@ -52,6 +53,7 @@ class test_body_example : public test_body_base<sigIDMapping>
 {
   public:
 	using test_body_base::test_body_base;
+	virtual ~test_body_example(){}
 	case_result body(unsigned long id, std::shared_ptr<sigIDMapping> arg) override
 	{
 		return CASE_SUCCESS;
@@ -106,6 +108,7 @@ class test_suit_example : public test_suit_base
 {
   public:
 	using test_suit_base::test_suit_base;
+	virtual ~test_suit_example(){}
 	void init() override
 	{
 		addCase(std::make_shared<test_case_example>("case name", "case info"));
@@ -120,6 +123,7 @@ class test_suit_example : public test_suit_base
 class test_project_example : public test_project_base
 {
   public:
+	virtual ~test_project_example(){}
 	using test_project_base::test_project_base;
 	void init() override
 	{

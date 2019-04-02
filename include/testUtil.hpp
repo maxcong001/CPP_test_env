@@ -43,7 +43,7 @@
 #include "threadPool.hpp"
 #include <sstream>
 
-using namespace std;
+//using namespace std;
 /*
 3/4 bit
 https://en.wikipedia.org/wiki/ANSI_escape_code
@@ -80,7 +80,6 @@ class test_util
 		std::string project_name = sig_result[0];
 		std::string suit_name = sig_result[1];
 		std::string case_name = sig_result[2];
-		//std::cout << "project is : " << project_name << ", suit is : " << suit_name << ", case is : " << case_name << std::endl;
 		return std::make_tuple(project_name, suit_name, case_name);
 	}
 	static std::vector<std::string> sig_split(const std::string &s, char delim)
@@ -204,13 +203,13 @@ class result_container
 		std::unique_lock<std::mutex> lock(result_mutex);
 		for (auto project : _case_reslut_container)
 		{
-			cout << "now showing the result under project : " << magenta << project.first << ", total " << project.second.size() << " suit" << normal << endl;
+			std::cout << "now showing the result under project : " << magenta << project.first << ", total " << project.second.size() << " suit" << normal << std::endl;
 			for (auto suit : project.second)
 			{
-				cout << "now showing the result under suit : " << magenta << suit.first << normal << endl;
+				std::cout << "now showing the result under suit : " << magenta << suit.first << normal << std::endl;
 				for (auto one_case : suit.second)
 				{
-					string result;
+					std::string result;
 					if (one_case.second == CASE_SUCCESS)
 					{
 						result = _SUCCESS;
@@ -221,13 +220,13 @@ class result_container
 						result = _FAIL;
 						fail++;
 					}
-					cout << "now showing the result of case : " << cyan << one_case.first << ", result is : " << result << normal << endl;
+					std::cout << "now showing the result of case : " << cyan << one_case.first << ", result is : " << result << normal << std::endl;
 				}
 			}
 		}
 
-		cout << magenta << "total run [ " << (pass + fail) << " ] cases, " << normal << green << "[ " << pass << " ] cases pass" << normal
-			 << ", " << red << "[ " << fail << " ] cases fail " << normal << endl;
+		std::cout << magenta << "total run [ " << (pass + fail) << " ] cases, " << normal << green << "[ " << pass << " ] cases pass" << normal
+			 << ", " << red << "[ " << fail << " ] cases fail " << normal << std::endl;
 	}
 	std::map<std::string, std::map<std::string, std::map<std::string, case_result>>> _case_reslut_container;
 	std::map<std::string, std::promise<case_result>> _case_promise_container;
@@ -235,4 +234,3 @@ class result_container
 };
 std::function<bool(unsigned long)> REC_CASE_FAIL = std::bind(&result_container::record_result_with_id, result_container::instance(), CASE_FAIL, std::placeholders::_1, true);
 std::function<bool(unsigned long)> REC_CASE_SUCCESS = std::bind(&result_container::record_result_with_id, result_container::instance(), CASE_SUCCESS, std::placeholders::_1, true);
-
