@@ -29,7 +29,7 @@ class test_suit_base
 {
   public:
 	test_suit_base() = delete;
-	test_suit_base(string name) { _suit_name = name; }
+	explicit test_suit_base(std::string name) : _suit_name(name) {}
 	void addCase(std::shared_ptr<test_case_base> test_case)
 	{
 		std::cout << "[test suit]: add test case" << test_case->get_case_name() << std::endl;
@@ -38,7 +38,7 @@ class test_suit_base
 		case_pool::instance()->add_case(test_case);
 	}
 	virtual void init() = 0;
-	string get_suit_name() { return _suit_name; }
+	std::string get_suit_name() { return _suit_name; }
 	void set_suit_name(std::string name)
 	{
 		_suit_name = name;
